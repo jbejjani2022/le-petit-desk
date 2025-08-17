@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>le petite desk</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300&family=Space+Grotesk:wght@300&family=Inter:wght@300&family=Poppins:wght@200&family=Epilogue:wght@200&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <style>
+    :root {
+      --bg: #422d2d;
+      --text: #fdf6ec;
+      --accent: #df7829;
+      --font-family: 'Outfit', sans-serif;
+      
+      /* Font options for easy testing:
+         'Outfit', sans-serif (Light - 300)
+         'Space Grotesk', sans-serif (Light - 300)
+         'Inter', sans-serif (Light - 300)
+         'Poppins', sans-serif (ExtraLight - 200)
+         'Epilogue', sans-serif (ExtraLight - 200)
+      */
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--font-family);
+      font-weight: 300;
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    section {
+      min-height: 70vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 2rem;
+    }
+
+    section.landing {
+      min-height: 85vh;
+      position: relative;
+    }
+
+    .landing-container {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .desk-graphic {
+      display: block;
+      margin: 0 auto;
+      max-width: 100%;
+      height: auto;
+    }
+
+    section.subscribe {
+      min-height: 100vh;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .subscribe form {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+    }
+
+    h1, h2, h3, p {
+      margin: 0.5rem 0;
+    }
+
+    h1 {
+      font-size: 3.5rem;
+    }
+
+    h2 {
+      font-size: 2.2rem;
+    }
+
+    p {
+      font-size: 1.6rem;
+      line-height: 1.6;
+    }
+
+    h1.title {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 10;
+      margin: 0;
+      pointer-events: none;
+    }
+
+    h1.title span {
+      position: absolute;
+      display: inline-block;
+      opacity: 0;
+      transform: translateY(-400px);
+      transform-origin: center center;
+      font-weight: bold;
+    }
+
+    /* Individual word positioning for natural settling */
+    h1.title span:nth-child(1) { /* le */
+      left: 38%;
+      top: 43%;
+    }
+
+    h1.title span:nth-child(2) { /* petite */
+      left: 45%;
+      top: 55%;
+    }
+
+    h1.title span:nth-child(3) { /* desk */
+      left: 57%;
+      top: 59%;
+    }
+
+    .mission, .upcoming, .past, .subscribe {
+      opacity: 0;
+      transform: translateY(100px);
+    }
+
+    .mission p {
+      opacity: 0;
+      transform: translateY(80px);
+    }
+
+    .subscribe form {
+      opacity: 0;
+      transform: translateY(80px);
+    }
+
+    .event {
+      margin: 1rem 0;
+      font-size: 1.7rem;
+      opacity: 0;
+      transform: translateY(60px);
+    }
+
+    .event.upcoming-title, .event.past-title, .event.mission-title {
+      color: var(--accent);
+      font-weight: bold;
+      font-size: 2.2rem;
+      margin-bottom: 2rem;
+    }
+
+    input[type="email"] {
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid var(--text);
+      color: var(--text);
+      font-family: var(--font-family);
+      font-weight: 300;
+      font-size: 1.3rem;
+      text-align: center;
+      outline: none;
+      padding: 1rem;
+      width: 350px;
+      transition: border-bottom-color 0.3s ease;
+    }
+
+    input[type="email"]:focus {
+      border-bottom-color: var(--accent);
+    }
+
+    input[type="email"]::placeholder {
+      color: rgba(253, 246, 236, 0.5);
+    }
+
+    .subscribe-text {
+      font-size: 1.2rem;
+      margin-top: 1rem;
+      color: rgba(253, 246, 236, 0.7);
+    }
+
+    .error-message {
+      color: #ff6b6b;
+      font-size: 1rem;
+      margin-top: 0.5rem;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      font-family: var(--font-family);
+      font-weight: 300;
+    }
+
+    .error-message.show {
+      opacity: 1;
+    }
+
+    /* Dot Navigation */
+    .dot-nav {
+      position: fixed;
+      right: 2rem;
+      top: 50%;
+      transform: translateY(-50%) scale(0.85);
+      transform-origin: right center;
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      transition: transform 0.25s ease, opacity 0.25s ease;
+      opacity: 0.7;
+    }
+
+    .dot-nav.expanded {
+      transform: translateY(-50%) scale(1.1);
+      opacity: 1;
+    }
+
+    .dot-nav .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(253, 246, 236, 0.3);
+      border: 2px solid rgba(253, 246, 236, 0.5);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      position: relative;
+      outline: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .dot-nav .dot:focus,
+    .dot-nav .dot:focus-visible,
+    .dot-nav .dot:active {
+      outline: none;
+      box-shadow: none;
+    }
+
+    .dot-nav .dot::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .dot-nav .dot.active {
+      background: rgba(233, 164, 111, 0.2);
+      border-color: var(--accent);
+      transform: scale(1.7);
+    }
+
+    /* Ensure active dot looks the same whether reached by click or scroll */
+    .dot-nav .dot.active:hover {
+      transform: scale(1.7);
+    }
+
+    .dot-nav .dot.active::before {
+      opacity: 1;
+    }
+
+    .dot-nav .dot:hover {
+      background: rgba(253, 246, 236, 0.4);
+      border-color: var(--accent);
+      transform: scale(1.35);
+    }
+    
+    /* Touch devices: remove hover/focus/tap visual differences on active */
+    @media (hover: none) {
+      .dot-nav .dot:hover {
+        background: rgba(253, 246, 236, 0.3);
+        border-color: rgba(253, 246, 236, 0.5);
+        transform: none;
+      }
+      .dot-nav .dot:focus,
+      .dot-nav .dot:focus-visible,
+      .dot-nav .dot:active {
+        outline: none;
+        box-shadow: none;
+      }
+      .dot-nav .dot.active,
+      .dot-nav .dot.active:hover,
+      .dot-nav .dot.active:focus,
+      .dot-nav .dot.active:active {
+        background: rgba(233, 164, 111, 0.2);
+        border-color: var(--accent);
+        transform: scale(1.7);
+      }
+    }
+
+    /* Ensure section titles maintain their accent color */
+    .event.upcoming-title, .event.past-title, .event.mission-title {
+      color: var(--accent) !important;
+    }
+
+    /* Constrain text and respect a dynamic safety gap for the dot rail */
+    :root {
+      --content-max: 1000px;
+      --rail-safe-space: 6rem; /* space reserved on the right for dot rail proximity */
+    }
+
+    section:not(.landing) > div {
+      width: min(var(--content-max), calc(100vw - var(--rail-safe-space)));
+      margin: 0 auto;
+      padding-left: clamp(1rem, 3vw, 2rem);
+      padding-right: clamp(1rem, 3vw, 2rem);
+    }
+
+    /* Ensure subscribe form aligns with text gutters */
+    section.subscribe form {
+      width: min(var(--content-max), calc(100vw - var(--rail-safe-space)));
+      margin-left: auto;
+      margin-right: auto;
+      padding-left: clamp(1rem, 3vw, 2rem);
+      padding-right: clamp(1rem, 3vw, 2rem);
+    }
+
+    /* Turtle Animation */
+    .turtle-container {
+      position: relative;
+      width: 100%;
+      height: 110px;
+      margin-top: 2rem;
+      overflow: hidden;
+    }
+
+    .turtle {
+      position: absolute;
+      width: 90px;
+      height: 90px;
+      background-image: url('static/turtle_light/sprite_turtle0.png');
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      top: 10px;
+      opacity: 0;
+      left: -60px;
+    }
+
+    .turtle.animate {
+      animation: walkAcrossWithDelay 30s linear infinite, walkSprite 1.4s steps(2) infinite;
+    }
+
+    @keyframes walkAcrossWithDelay {
+      0% {
+        left: -60px;
+        opacity: 0;
+      }
+      5% {
+        left: -60px;
+        opacity: 0;
+      }
+      8% {
+        left: -60px;
+        opacity: 1;
+      }
+      85% {
+        left: calc(100% + 60px);
+        opacity: 1;
+      }
+      88% {
+        left: calc(100% + 60px);
+        opacity: 0;
+      }
+      100% {
+        left: calc(100% + 60px);
+        opacity: 0;
+      }
+    }
+
+    @keyframes walkSprite {
+      0% {
+        background-image: url('static/turtle_light/sprite_turtle0.png');
+      }
+      50% {
+        background-image: url('static/turtle_light/sprite_turtle1.png');
+      }
+    }
+
+
+
+    /* Mobile responsiveness */
+    @media (max-width: 768px) {
+      /* Narrow screens: reduce rail safety space a bit */
+      :root { --rail-safe-space: 4.5rem; }
+      /* Dot nav sizing for mobile/tablet */
+      .dot-nav {
+        transform: translateY(-50%) scale(0.75);
+        right: 1rem;
+        gap: 1rem;
+        opacity: 0.85;
+      }
+
+      .dot-nav .dot {
+        width: 9px;
+        height: 9px;
+      }
+
+      .dot-nav .dot.active {
+        transform: scale(1.8);
+      }
+
+      .dot-nav .dot.active:hover {
+        transform: scale(1.9);
+      }
+
+      .dot-nav .dot:hover {
+        transform: scale(1.35);
+      }
+      h1 {
+        font-size: 2.2rem;
+      }
+      
+      h2 {
+        font-size: 1.6rem;
+      }
+      
+      p {
+        font-size: 1.2rem;
+      }
+      
+      .event {
+        font-size: 1.3rem;
+      }
+      
+      .event.upcoming-title, .event.past-title, .event.mission-title {
+        font-size: 1.7rem;
+      }
+      
+      input[type="email"] {
+        width: 280px;
+        max-width: 72vw;
+        font-size: 1.5rem;
+      }
+      
+      section {
+        padding: 1rem;
+        min-height: 60vh;
+      }
+
+      section.landing {
+        min-height: 100dvh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        max-width: 100%;
+        overflow-x: hidden;
+      }
+
+      .landing-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        max-width: 100%;
+        overflow-x: hidden;
+      }
+
+      .desk-graphic {
+        width: 150%;
+        max-width: none;
+        height: auto;
+        position: relative;
+        left: 50%;
+        transform: translateX(-50%);
+        display: block;
+        object-fit: contain;
+        object-position: center;
+      }
+
+      /* Adjust word positioning for mobile */
+      h1.title span:nth-child(1) { /* le */
+        left: 32%;
+        top: 37%;
+        font-size: 2.2rem;
+      }
+
+      h1.title span:nth-child(2) { /* petite */
+        left: 40%;
+        top: 48%;
+        font-size: 2.2rem;
+      }
+
+      h1.title span:nth-child(3) { /* desk */
+        left: 52%;
+        top: 32%;
+        font-size: 2.2rem;
+      }
+
+      section.subscribe {
+        min-height: 100vh;
+      }
+
+      /* Turtle responsive adjustments */
+      .turtle-container {
+        height: 95px;
+        margin-top: 1.5rem;
+      }
+
+      .turtle {
+        width: 72px;
+        height: 72px;
+      }
+
+      .turtle.animate {
+        animation: walkAcrossWithDelay 24s linear infinite, walkSprite 1.4s steps(2) infinite;
+      }
+    }
+
+    @media (max-width: 480px) {
+      /* Small mobile: keep generous rail clearance but allow text width */
+      :root { --rail-safe-space: 4rem; }
+      h1 {
+        font-size: 1.8rem;
+      }
+      
+      .event.upcoming-title, .event.past-title, .event.mission-title {
+        font-size: 1.4rem;
+      }
+      
+      input[type="email"] {
+        width: 240px;
+        max-width: 70vw;
+        font-size: 1.2rem;
+      }
+
+      section {
+        min-height: 55vh;
+        padding: 0;
+      }
+
+      section.landing {
+        min-height: 100dvh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        max-width: 100%;
+        overflow-x: hidden;
+      }
+
+      .landing-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        max-width: 100%;
+        overflow-x: hidden;
+      }
+
+      .desk-graphic {
+        width: 180%;
+        max-width: none;
+        height: auto;
+        position: relative;
+        left: 50%;
+        transform: translateX(-50%);
+        display: block;
+        object-fit: contain;
+        object-position: center;
+      }
+
+      /* Adjust word positioning for small mobile */
+      h1.title span:nth-child(1) { /* le */
+        left: 27%;
+        top: 35%;
+        font-size: 1.8rem;
+      }
+
+      h1.title span:nth-child(2) { /* petite */
+        left: 35%;
+        top: 46%;
+        font-size: 1.8rem;
+      }
+
+      h1.title span:nth-child(3) { /* desk */
+        left: 47%;
+        top: 30%;
+        font-size: 1.8rem;
+      }
+
+      section.subscribe {
+        min-height: 100vh;
+      }
+
+      /* Dot navigation on small mobile */
+      .dot-nav {
+        display: flex;
+        right: 0.8rem;
+        gap: 1.1rem;
+        transform: translateY(-50%) scale(0.7);
+        opacity: 0.9;
+      }
+
+      .dot-nav .dot {
+        width: 9px;
+        height: 9px;
+      }
+
+      .dot-nav .dot.active {
+        transform: scale(1.85);
+      }
+
+      .dot-nav .dot.active:hover {
+        transform: scale(2.0);
+      }
+
+      .dot-nav .dot:hover {
+        transform: scale(1.45);
+      }
+
+      /* Turtle responsive adjustments for small mobile */
+      .turtle-container {
+        height: 80px;
+        margin-top: 1rem;
+      }
+
+      .turtle {
+        width: 60px;
+        height: 60px;
+      }
+
+      .turtle.animate {
+        animation: walkAcrossWithDelay 20s linear infinite, walkSprite 1.4s steps(2) infinite;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Landing -->
+  <section class="landing">
+    <div class="landing-container">
+      <!-- Desk graphic -->
+      <img src="static/desk.svg" alt="Le Petite Desk" class="desk-graphic" width="1600" height="1600" />
+      <h1 class="title">
+        <span>le</span>
+        <span>petite</span>
+        <span>desk</span>
+      </h1>
+    </div>
+  </section>
+
+  <!-- Mission -->
+  <section class="mission">
+    <div>
+      <div class="event mission-title">our dorm turned studio</div>
+      <p>we gather student musicians in the most honest venue we know—our living room</p>
+      <p>home to a petite desk with big sound</p>
+      <p>no pressure, just music that matters</p>
+      <p>made in good company</p>
+      <div class="turtle-container">
+        <div class="turtle"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Upcoming Event -->
+  <section class="upcoming">
+    <div>
+      <div class="event upcoming-title">fri, sep 19</div>
+      <div class="event">le petite desk opening night</div>
+    </div>
+  </section>
+
+  <!-- Past Events -->
+  <section class="past">
+    <div>
+      <div class="event past-title">previously</div>
+      <div class="event">jun 5 — jazz jam</div>
+      <div class="event">apr 10 — chamber music reading</div>
+      <div class="event">feb 22 — house set with dj ren</div>
+    </div>
+  </section>
+
+  <!-- Subscribe -->
+  <section class="subscribe">
+    <form id="subscribeForm" novalidate>
+      <input type="email" id="emailInput" placeholder="your@email.com" />
+      <div class="subscribe-text">stay tuned to le petite desk</div>
+      <div class="error-message" id="errorMessage">invalid email address</div>
+    </form>
+  </section>
+
+  <!-- Dot Navigation -->
+  <nav class="dot-nav">
+    <div class="dot" data-section="landing"></div>
+    <div class="dot" data-section="mission"></div>
+    <div class="dot" data-section="upcoming"></div>
+    <div class="dot" data-section="past"></div>
+    <div class="dot" data-section="subscribe"></div>
+  </nav>
+
+  <script>
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Title animation - realistic physics for each word
+    const words = gsap.utils.toArray(".title span");
+    
+    // Animate each word individually with realistic physics
+    words.forEach((word, index) => {
+      const rotations = [-4, 2, 0]; // Different rotation angles for each word
+      const delays = [0.3, 0.7, 1.1]; // Staggered timing
+      const bounceHeights = [25, 30, 28]; // Different bounce amounts
+      
+      gsap.timeline()
+        .to(word, {
+          y: 0,
+          opacity: 1,
+          rotation: rotations[index],
+          duration: 0.8,
+          ease: "power3.in",
+          delay: delays[index]
+        })
+        .to(word, {
+          y: -bounceHeights[index],
+          duration: 0.15,
+          ease: "power2.out"
+        })
+        .to(word, {
+          y: 0,
+          duration: 0.25,
+          ease: "power2.in"
+        })
+        .to(word, {
+          y: -bounceHeights[index] * 0.6,
+          duration: 0.12,
+          ease: "power2.out"
+        })
+        .to(word, {
+          y: 0,
+          duration: 0.2,
+          ease: "power2.in"
+        })
+        .to(word, {
+          y: -bounceHeights[index] * 0.25,
+          duration: 0.1,
+          ease: "power2.out"
+        })
+        .to(word, {
+          y: 0,
+          duration: 0.15,
+          ease: "power2.in"
+        });
+    });
+
+    // Scroll-triggered fade-in-up animations for sections
+    [".mission", ".upcoming", ".past", ".subscribe"].forEach(cls => {
+      gsap.to(cls, {
+        opacity: 1,
+        y: 0,
+        duration: 1.2,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: cls,
+          start: "top 85%",
+          toggleActions: "play none none none"
+        }
+      });
+    });
+
+    // Fade-in-up animations for individual events
+    gsap.utils.toArray(".event").forEach((event, index) => {
+      gsap.to(event, {
+        opacity: 1,
+        y: 0,
+        duration: 1,
+        ease: "power3.out",
+        delay: index * 0.15,
+        scrollTrigger: {
+          trigger: event.closest('section'),
+          start: "top 80%",
+          toggleActions: "play none none none"
+        }
+      });
+    });
+
+    // Fade-in-up for mission text
+    gsap.to(".mission p", {
+      opacity: 1,
+      y: 0,
+      duration: 1.2,
+      ease: "power3.out",
+      scrollTrigger: {
+        trigger: ".mission",
+        start: "top 85%",
+        toggleActions: "play none none none"
+      }
+    });
+
+    // Fade-in-up for subscribe form
+    gsap.to(".subscribe form", {
+      opacity: 1,
+      y: 0,
+      duration: 1.2,
+      ease: "power3.out",
+      scrollTrigger: {
+        trigger: ".subscribe",
+        start: "top 85%",
+        toggleActions: "play none none none"
+      }
+    });
+
+    // Email validation
+    const emailInput = document.getElementById('emailInput');
+    const errorMessage = document.getElementById('errorMessage');
+    const subscribeForm = document.getElementById('subscribeForm');
+
+    function validateEmail(email) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return emailRegex.test(email);
+    }
+
+    function showError() {
+      errorMessage.classList.add('show');
+    }
+
+    function hideError() {
+      errorMessage.classList.remove('show');
+    }
+
+    subscribeForm.addEventListener('submit', function(e) {
+      e.preventDefault(); // Always prevent default form submission
+      const email = emailInput.value.trim();
+      
+      if (!email || !validateEmail(email)) {
+        showError();
+      } else {
+        hideError();
+        // Here you could add code to actually submit the email
+        console.log('Valid email submitted:', email);
+      }
+    });
+
+    // Hide error message when user starts typing again
+    emailInput.addEventListener('input', function() {
+      hideError();
+    });
+
+    // Dot Navigation functionality
+    const dots = document.querySelectorAll('.dot-nav .dot');
+    const sections = document.querySelectorAll('section');
+
+    // Function to update active dot based on scroll position
+    function updateActiveDot() {
+      const scrollPosition = window.scrollY + window.innerHeight / 2;
+      
+      sections.forEach((section, index) => {
+        const sectionTop = section.offsetTop;
+        const sectionBottom = sectionTop + section.offsetHeight;
+        
+        if (scrollPosition >= sectionTop && scrollPosition <= sectionBottom) {
+          // Remove active class from all dots
+          dots.forEach(dot => dot.classList.remove('active'));
+          // Add active class to current dot
+          if (dots[index]) {
+            dots[index].classList.add('active');
+          }
+        }
+      });
+    }
+
+    // Helper: smooth scroll to center a target element in viewport
+    function scrollElementToCenter(element) {
+      const rect = element.getBoundingClientRect();
+      const absoluteTop = window.scrollY + rect.top;
+      const targetTop = absoluteTop + rect.height / 2 - window.innerHeight / 2;
+      window.scrollTo({ top: Math.max(0, targetTop), behavior: 'smooth' });
+    }
+
+    // Smooth scroll to section when dot is clicked
+    dots.forEach((dot, index) => {
+      dot.addEventListener('click', () => {
+        const targetSection = sections[index];
+        if (!targetSection) return;
+
+        // Dots: 0=landing, 1=mission, 2=upcoming, 3=past, 4=subscribe
+        if (index === 1 || index === 2 || index === 3) {
+          scrollElementToCenter(targetSection);
+        } else {
+          targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+
+    // Update active dot on scroll
+    window.addEventListener('scroll', updateActiveDot);
+    
+    // Expand/shrink dot nav based on activity (desktop only)
+    const dotNav = document.querySelector('.dot-nav');
+    let shrinkTimeout = null;
+
+    function expandDotNav() {
+      if (window.matchMedia('(max-width: 768px)').matches) return; // no auto-expand on mobile/tablet
+      dotNav.classList.add('expanded');
+      if (shrinkTimeout) clearTimeout(shrinkTimeout);
+      shrinkTimeout = setTimeout(() => {
+        dotNav.classList.remove('expanded');
+      }, 1200);
+    }
+
+    // Expand on scroll and on hover (desktop only)
+    window.addEventListener('scroll', expandDotNav, { passive: true });
+    dotNav.addEventListener('mouseenter', () => {
+      if (!window.matchMedia('(max-width: 768px)').matches) {
+        dotNav.classList.add('expanded');
+      }
+    });
+    dotNav.addEventListener('mouseleave', () => {
+      if (!window.matchMedia('(max-width: 768px)').matches) {
+        dotNav.classList.remove('expanded');
+      }
+    });
+    
+    // Set initial active dot
+    updateActiveDot();
+
+    // Turtle animation trigger
+    function startTurtleAnimation() {
+      const turtle = document.querySelector('.turtle');
+      if (turtle && !turtle.classList.contains('animate')) {
+        turtle.classList.add('animate');
+      }
+    }
+
+    // Initialize turtle animation when the mission section becomes visible
+    ScrollTrigger.create({
+      trigger: ".mission",
+      start: "top 80%",
+      onEnter: startTurtleAnimation,
+      once: true // Only trigger once, then let animation continue forever
+    });
+
+  </script>
+</body>
+</html>
