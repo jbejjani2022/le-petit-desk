@@ -106,6 +106,7 @@
       pointer-events: none;
     }
 
+    /* UPDATED: Simplified rule with fluid font size */
     h1.title span {
       position: absolute;
       display: inline-block;
@@ -113,22 +114,7 @@
       transform: translateY(-400px);
       transform-origin: center center;
       font-weight: bold;
-    }
-
-    /* Individual word positioning for natural settling */
-    h1.title span:nth-child(1) { /* le */
-      left: 38%;
-      top: 43%;
-    }
-
-    h1.title span:nth-child(2) { /* petite */
-      left: 45%;
-      top: 55%;
-    }
-
-    h1.title span:nth-child(3) { /* desk */
-      left: 57%;
-      top: 59%;
+      font-size: clamp(1.6rem, 3.5vw, 3.5rem); /* min, preferred, max */
     }
 
     .mission, .upcoming, .past, .subscribe {
@@ -263,7 +249,6 @@
       transform: scale(1.7);
     }
 
-    /* Ensure active dot looks the same whether reached by click or scroll */
     .dot-nav .dot.active:hover {
       transform: scale(1.7);
     }
@@ -278,7 +263,6 @@
       transform: scale(1.35);
     }
     
-    /* Touch devices: remove hover/focus/tap visual differences on active */
     @media (hover: none) {
       .dot-nav .dot:hover {
         background: rgba(253, 246, 236, 0.3);
@@ -301,15 +285,13 @@
       }
     }
 
-    /* Ensure section titles maintain their accent color */
     .event.upcoming-title, .event.past-title, .event.mission-title {
       color: var(--accent) !important;
     }
 
-    /* Constrain text and respect a dynamic safety gap for the dot rail */
     :root {
       --content-max: 1000px;
-      --rail-safe-space: 6rem; /* space reserved on the right for dot rail proximity */
+      --rail-safe-space: 6rem;
     }
 
     section:not(.landing) > div {
@@ -319,7 +301,6 @@
       padding-right: clamp(1rem, 3vw, 2rem);
     }
 
-    /* Ensure subscribe form aligns with text gutters */
     section.subscribe form {
       width: min(var(--content-max), calc(100vw - var(--rail-safe-space)));
       margin-left: auto;
@@ -355,90 +336,40 @@
     }
 
     @keyframes walkAcrossWithDelay {
-      0% {
-        left: -60px;
-        opacity: 0;
-      }
-      5% {
-        left: -60px;
-        opacity: 0;
-      }
-      8% {
-        left: -60px;
-        opacity: 1;
-      }
-      85% {
-        left: calc(100% + 60px);
-        opacity: 1;
-      }
-      88% {
-        left: calc(100% + 60px);
-        opacity: 0;
-      }
-      100% {
-        left: calc(100% + 60px);
-        opacity: 0;
-      }
+      0% { left: -60px; opacity: 0; }
+      5% { left: -60px; opacity: 0; }
+      8% { left: -60px; opacity: 1; }
+      85% { left: calc(100% + 60px); opacity: 1; }
+      88% { left: calc(100% + 60px); opacity: 0; }
+      100% { left: calc(100% + 60px); opacity: 0; }
     }
 
     @keyframes walkSprite {
-      0% {
-        background-image: url('static/turtle_light/sprite_turtle0.png');
-      }
-      50% {
-        background-image: url('static/turtle_light/sprite_turtle1.png');
-      }
+      0% { background-image: url('static/turtle_light/sprite_turtle0.png'); }
+      50% { background-image: url('static/turtle_light/sprite_turtle1.png'); }
     }
 
 
 
     /* Mobile responsiveness */
     @media (max-width: 768px) {
-      /* Narrow screens: reduce rail safety space a bit */
       :root { --rail-safe-space: 4.5rem; }
-      /* Dot nav sizing for mobile/tablet */
       .dot-nav {
         transform: translateY(-50%) scale(0.75);
         right: 1rem;
         gap: 1rem;
         opacity: 0.85;
       }
-
-      .dot-nav .dot {
-        width: 9px;
-        height: 9px;
-      }
-
-      .dot-nav .dot.active {
-        transform: scale(1.8);
-      }
-
-      .dot-nav .dot.active:hover {
-        transform: scale(1.9);
-      }
-
-      .dot-nav .dot:hover {
-        transform: scale(1.35);
-      }
-      h1 {
-        font-size: 2.2rem;
-      }
+      .dot-nav .dot { width: 9px; height: 9px; }
+      .dot-nav .dot.active { transform: scale(1.8); }
+      .dot-nav .dot.active:hover { transform: scale(1.9); }
+      .dot-nav .dot:hover { transform: scale(1.35); }
       
-      h2 {
-        font-size: 1.6rem;
-      }
-      
-      p {
-        font-size: 1.2rem;
-      }
-      
-      .event {
-        font-size: 1.3rem;
-      }
-      
-      .event.upcoming-title, .event.past-title, .event.mission-title {
-        font-size: 1.7rem;
-      }
+      h1 { font-size: 2.2rem; }
+      h2 { font-size: 1.6rem; }
+      p { font-size: 1.2rem; }
+      .event { font-size: 1.3rem; }
+      .event.upcoming-title, .event.past-title, .event.mission-title { font-size: 1.7rem; }
       
       input[type="email"] {
         width: 280px;
@@ -446,10 +377,7 @@
         font-size: 1.5rem;
       }
       
-      section {
-        padding: 1rem;
-        min-height: 60vh;
-      }
+      section { padding: 1rem; min-height: 60vh; }
 
       section.landing {
         min-height: 100dvh;
@@ -483,55 +411,18 @@
         object-position: center;
       }
 
-      /* Adjust word positioning for mobile */
-      h1.title span:nth-child(1) { /* le */
-        left: 32%;
-        top: 44%;
-        font-size: 2.2rem;
-      }
-
-      h1.title span:nth-child(2) { /* petite */
-        left: 44%;
-        top: 56%;
-        font-size: 2.2rem;
-      }
-
-      h1.title span:nth-child(3) { /* desk */
-        left: 61%;
-        top: 60%;
-        font-size: 2.2rem;
-      }
-
-      section.subscribe {
-        min-height: 100vh;
-      }
+      section.subscribe { min-height: 100vh; }
 
       /* Turtle responsive adjustments */
-      .turtle-container {
-        height: 95px;
-        margin-top: 1.5rem;
-      }
-
-      .turtle {
-        width: 72px;
-        height: 72px;
-      }
-
-      .turtle.animate {
-        animation: walkAcrossWithDelay 24s linear infinite, walkSprite 1.4s steps(2) infinite;
-      }
+      .turtle-container { height: 95px; margin-top: 1.5rem; }
+      .turtle { width: 72px; height: 72px; }
+      .turtle.animate { animation: walkAcrossWithDelay 24s linear infinite, walkSprite 1.4s steps(2) infinite; }
     }
 
     @media (max-width: 480px) {
-      /* Small mobile: keep generous rail clearance but allow text width */
       :root { --rail-safe-space: 4rem; }
-      h1 {
-        font-size: 1.8rem;
-      }
-      
-      .event.upcoming-title, .event.past-title, .event.mission-title {
-        font-size: 1.4rem;
-      }
+      h1 { font-size: 1.8rem; }
+      .event.upcoming-title, .event.past-title, .event.mission-title { font-size: 1.4rem; }
       
       input[type="email"] {
         width: 240px;
@@ -539,10 +430,7 @@
         font-size: 1.2rem;
       }
 
-      section {
-        min-height: 55vh;
-        padding: 0;
-      }
+      section { min-height: 55vh; padding: 0; }
 
       section.landing {
         min-height: 100dvh;
@@ -576,30 +464,8 @@
         object-position: center;
       }
 
-      /* Adjust word positioning for small mobile */
-      h1.title span:nth-child(1) { /* le */
-        left: 28%;
-        top: 44%;
-        font-size: 1.6rem;
-      }
+      section.subscribe { min-height: 100vh; }
 
-      h1.title span:nth-child(2) { /* petite */
-        left: 42%;
-        top: 55%;
-        font-size: 1.6rem;
-      }
-
-      h1.title span:nth-child(3) { /* desk */
-        left: 63%;
-        top: 60%;
-        font-size: 1.6rem;
-      }
-
-      section.subscribe {
-        min-height: 100vh;
-      }
-
-      /* Dot navigation on small mobile */
       .dot-nav {
         display: flex;
         right: 0.8rem;
@@ -608,46 +474,22 @@
         opacity: 0.9;
       }
 
-      .dot-nav .dot {
-        width: 9px;
-        height: 9px;
-      }
-
-      .dot-nav .dot.active {
-        transform: scale(1.85);
-      }
-
-      .dot-nav .dot.active:hover {
-        transform: scale(2.0);
-      }
-
-      .dot-nav .dot:hover {
-        transform: scale(1.45);
-      }
+      .dot-nav .dot { width: 9px; height: 9px; }
+      .dot-nav .dot.active { transform: scale(1.85); }
+      .dot-nav .dot.active:hover { transform: scale(2.0); }
+      .dot-nav .dot:hover { transform: scale(1.45); }
 
       /* Turtle responsive adjustments for small mobile */
-      .turtle-container {
-        height: 80px;
-        margin-top: 1rem;
-      }
-
-      .turtle {
-        width: 60px;
-        height: 60px;
-      }
-
-      .turtle.animate {
-        animation: walkAcrossWithDelay 20s linear infinite, walkSprite 1.4s steps(2) infinite;
-      }
+      .turtle-container { height: 80px; margin-top: 1rem; }
+      .turtle { width: 60px; height: 60px; }
+      .turtle.animate { animation: walkAcrossWithDelay 20s linear infinite, walkSprite 1.4s steps(2) infinite; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Landing -->
   <section class="landing">
     <div class="landing-container">
-      <!-- Desk graphic -->
       <img src="static/desk.svg" alt="Le Petite Desk" class="desk-graphic" width="1600" height="1600" />
       <h1 class="title">
         <span>le</span>
@@ -657,7 +499,6 @@
     </div>
   </section>
 
-  <!-- Mission -->
   <section class="mission">
     <div>
       <div class="event mission-title">our dorm turned studio</div>
@@ -671,7 +512,6 @@
     </div>
   </section>
 
-  <!-- Upcoming Event -->
   <section class="upcoming">
     <div>
       <div class="event upcoming-title">fri, sep 19</div>
@@ -679,7 +519,6 @@
     </div>
   </section>
 
-  <!-- Past Events -->
   <section class="past">
     <div>
       <div class="event past-title">previously</div>
@@ -689,7 +528,6 @@
     </div>
   </section>
 
-  <!-- Subscribe -->
   <section class="subscribe">
     <form id="subscribeForm" novalidate>
       <input type="email" id="emailInput" placeholder="your@email.com" />
@@ -698,7 +536,6 @@
     </form>
   </section>
 
-  <!-- Dot Navigation -->
   <nav class="dot-nav">
     <div class="dot" data-section="landing"></div>
     <div class="dot" data-section="mission"></div>
@@ -710,14 +547,64 @@
   <script>
     gsap.registerPlugin(ScrollTrigger);
 
-    // Title animation - realistic physics for each word
+    // ✨ NEW: DYNAMIC WORD POSITIONING LOGIC
+    const deskGraphic = document.querySelector('.desk-graphic');
+    const titleContainer = document.querySelector('h1.title');
     const words = gsap.utils.toArray(".title span");
-    
-    // Animate each word individually with realistic physics
+
+    // Define the target positions as percentages OF THE IMAGE ITSELF.
+    // Tweak these values slightly if needed to get the perfect placement.
+    const wordPositions = [
+      { x: 0.37, y: 0.4325 }, // le
+      { x: 0.455, y: 0.545 }, // petite
+      { x: 0.57, y: 0.595 }  // desk
+    ];
+
+    function updateWordPositions() {
+      // Get the current size and position of the desk image and the title container
+      const deskRect = deskGraphic.getBoundingClientRect();
+      const titleRect = titleContainer.getBoundingClientRect();
+
+      words.forEach((word, index) => {
+        const pos = wordPositions[index];
+        
+        // Calculate the absolute target coordinates on the page
+        const targetX = deskRect.left + (deskRect.width * pos.x);
+        const targetY = deskRect.top + (deskRect.height * pos.y);
+
+        // Convert the absolute coordinates to be relative to the title container,
+        // which is the positioning parent of the words.
+        const finalLeft = targetX - titleRect.left;
+        const finalTop = targetY - titleRect.top;
+
+        // Use GSAP to instantly set the position.
+        // This sets the final destination for the drop-in animation.
+        gsap.set(word, { left: finalLeft, top: finalTop });
+      });
+    }
+
+    // Run the positioning logic when the page loads and on window resize.
+    // We 'debounce' the resize event to avoid performance issues.
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(updateWordPositions, 100);
+    });
+
+    // Ensure image is loaded before we calculate, then run initial positioning
+    deskGraphic.addEventListener('load', updateWordPositions);
+    // Fallback for cached images that might not fire a 'load' event
+    if (deskGraphic.complete) {
+      updateWordPositions();
+    }
+    // END NEW LOGIC
+
+    // Title animation - This remains the same!
+    // It will now animate to the dynamically calculated positions.
     words.forEach((word, index) => {
-      const rotations = [-4, 2, 0]; // Different rotation angles for each word
-      const delays = [0.3, 0.7, 1.1]; // Staggered timing
-      const bounceHeights = [25, 30, 28]; // Different bounce amounts
+      const rotations = [-4, 2, 0];
+      const delays = [0.3, 0.7, 1.1];
+      const bounceHeights = [25, 30, 28];
       
       gsap.timeline()
         .to(word, {
@@ -728,36 +615,12 @@
           ease: "power3.in",
           delay: delays[index]
         })
-        .to(word, {
-          y: -bounceHeights[index],
-          duration: 0.15,
-          ease: "power2.out"
-        })
-        .to(word, {
-          y: 0,
-          duration: 0.25,
-          ease: "power2.in"
-        })
-        .to(word, {
-          y: -bounceHeights[index] * 0.6,
-          duration: 0.12,
-          ease: "power2.out"
-        })
-        .to(word, {
-          y: 0,
-          duration: 0.2,
-          ease: "power2.in"
-        })
-        .to(word, {
-          y: -bounceHeights[index] * 0.25,
-          duration: 0.1,
-          ease: "power2.out"
-        })
-        .to(word, {
-          y: 0,
-          duration: 0.15,
-          ease: "power2.in"
-        });
+        .to(word, { y: -bounceHeights[index], duration: 0.15, ease: "power2.out" })
+        .to(word, { y: 0, duration: 0.25, ease: "power2.in" })
+        .to(word, { y: -bounceHeights[index] * 0.6, duration: 0.12, ease: "power2.out" })
+        .to(word, { y: 0, duration: 0.2, ease: "power2.in" })
+        .to(word, { y: -bounceHeights[index] * 0.25, duration: 0.1, ease: "power2.out" })
+        .to(word, { y: 0, duration: 0.15, ease: "power2.in" });
     });
 
     // Scroll-triggered fade-in-up animations for sections
@@ -836,19 +699,17 @@
     }
 
     subscribeForm.addEventListener('submit', function(e) {
-      e.preventDefault(); // Always prevent default form submission
+      e.preventDefault();
       const email = emailInput.value.trim();
       
       if (!email || !validateEmail(email)) {
         showError();
       } else {
         hideError();
-        // Here you could add code to actually submit the email
         console.log('Valid email submitted:', email);
       }
     });
 
-    // Hide error message when user starts typing again
     emailInput.addEventListener('input', function() {
       hideError();
     });
@@ -857,7 +718,6 @@
     const dots = document.querySelectorAll('.dot-nav .dot');
     const sections = document.querySelectorAll('section');
 
-    // Function to update active dot based on scroll position
     function updateActiveDot() {
       const scrollPosition = window.scrollY + window.innerHeight / 2;
       
@@ -866,9 +726,7 @@
         const sectionBottom = sectionTop + section.offsetHeight;
         
         if (scrollPosition >= sectionTop && scrollPosition <= sectionBottom) {
-          // Remove active class from all dots
           dots.forEach(dot => dot.classList.remove('active'));
-          // Add active class to current dot
           if (dots[index]) {
             dots[index].classList.add('active');
           }
@@ -876,7 +734,6 @@
       });
     }
 
-    // Helper: smooth scroll to center a target element in viewport
     function scrollElementToCenter(element) {
       const rect = element.getBoundingClientRect();
       const absoluteTop = window.scrollY + rect.top;
@@ -884,13 +741,11 @@
       window.scrollTo({ top: Math.max(0, targetTop), behavior: 'smooth' });
     }
 
-    // Smooth scroll to section when dot is clicked
     dots.forEach((dot, index) => {
       dot.addEventListener('click', () => {
         const targetSection = sections[index];
         if (!targetSection) return;
 
-        // Dots: 0=landing, 1=mission, 2=upcoming, 3=past, 4=subscribe
         if (index === 1 || index === 2 || index === 3) {
           scrollElementToCenter(targetSection);
         } else {
@@ -899,15 +754,13 @@
       });
     });
 
-    // Update active dot on scroll
     window.addEventListener('scroll', updateActiveDot);
     
-    // Expand/shrink dot nav based on activity (desktop only)
     const dotNav = document.querySelector('.dot-nav');
     let shrinkTimeout = null;
 
     function expandDotNav() {
-      if (window.matchMedia('(max-width: 768px)').matches) return; // no auto-expand on mobile/tablet
+      if (window.matchMedia('(max-width: 768px)').matches) return;
       dotNav.classList.add('expanded');
       if (shrinkTimeout) clearTimeout(shrinkTimeout);
       shrinkTimeout = setTimeout(() => {
@@ -915,7 +768,6 @@
       }, 1200);
     }
 
-    // Expand on scroll and on hover (desktop only)
     window.addEventListener('scroll', expandDotNav, { passive: true });
     dotNav.addEventListener('mouseenter', () => {
       if (!window.matchMedia('(max-width: 768px)').matches) {
@@ -928,7 +780,6 @@
       }
     });
     
-    // Set initial active dot
     updateActiveDot();
 
     // Turtle animation trigger
@@ -939,14 +790,12 @@
       }
     }
 
-    // Initialize turtle animation when the mission section becomes visible
     ScrollTrigger.create({
       trigger: ".mission",
       start: "top 80%",
       onEnter: startTurtleAnimation,
-      once: true // Only trigger once, then let animation continue forever
+      once: true
     });
-
   </script>
 </body>
 </html>
