@@ -1,10 +1,6 @@
-# Le Petite Desk
+# 🎵 Le Petite Desk
 
-A minimal website for le petite desk - an intimate music venue bringing musicians together in the most honest venue we know: our living room.
-
-## 🎵 About
-
-Le petite desk is a dorm-turned-studio that hosts intimate musical gatherings. Home to a petite desk with big sound, we create spaces for musicians to perform without pressure, just music that matters, made in good company.
+A minimal website for le petite desk, a dorm-turned-studio that hosts intimate musical gatherings. We create spaces for musicians to perform without pressure, in good company.
 
 ## 🎯 Key Sections
 
