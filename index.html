@@ -164,14 +164,35 @@
       padding: 1rem;
       width: 350px;
       transition: border-bottom-color 0.3s ease;
+      border-radius: 0;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      box-shadow: none;
+      background-clip: padding-box;
+      caret-color: var(--text);
     }
 
     input[type="email"]:focus {
       border-bottom-color: var(--accent);
+      box-shadow: none;
     }
 
     input[type="email"]::placeholder {
       color: rgba(253, 246, 236, 0.5);
+    }
+
+    /* Remove autofill background and preserve underline-only style */
+    input[type="email"]:-webkit-autofill {
+      -webkit-box-shadow: 0 0 0px 1000px transparent inset;
+      box-shadow: 0 0 0px 1000px transparent inset;
+      -webkit-text-fill-color: var(--text);
+      border-bottom-color: var(--text);
+      transition: background-color 5000s ease-in-out 0s;
+    }
+    input[type="email"]:-webkit-autofill:focus {
+      border-bottom-color: var(--accent);
+      -webkit-text-fill-color: var(--text);
     }
 
     .subscribe-text {
