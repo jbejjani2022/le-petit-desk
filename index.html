@@ -189,6 +189,24 @@
       opacity: 1;
     }
 
+    .jam-with-us {
+      font-size: 1.2rem;
+      margin-top: 2rem;
+      color: rgba(253, 246, 236, 0.7);
+      font-family: var(--font-family);
+      font-weight: 300;
+    }
+
+    .jam-with-us a {
+      color: var(--text);
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .jam-with-us a:hover {
+      color: var(--accent);
+    }
+
     /* Instagram Icon */
     .instagram-icon {
       position: fixed;
@@ -402,6 +420,11 @@
         max-width: 72vw;
         font-size: 1.5rem;
       }
+
+      .jam-with-us {
+        font-size: 1.1rem;
+        margin-top: 1.5rem;
+      }
       
       section { padding: 1rem; min-height: 60vh; }
 
@@ -462,6 +485,11 @@
         width: 240px;
         max-width: 70vw;
         font-size: 1.2rem;
+      }
+
+      .jam-with-us {
+        font-size: 1.1rem;
+        margin-top: 1.2rem;
       }
 
       section { min-height: 55vh; padding: 0; }
@@ -570,9 +598,10 @@
 
   <section class="subscribe">
     <form id="subscribeForm" novalidate>
-      <input type="email" id="emailInput" placeholder="your@email.com" />
-      <div class="subscribe-text">stay tuned to le petite desk</div>
+      <input type="email" id="emailInput" name="email" placeholder="your@email.com" required />
+      <div class="subscribe-text">stay tuned to events at le petite desk</div>
       <div class="error-message" id="errorMessage">invalid email address</div>
+      <div class="jam-with-us">want to jam with us?<br>have ideas for a concert?<br><br>let us know at <a href="mailto:lepetitedesk@gmail.com">lepetitedesk@gmail.com</a></div>
     </form>
   </section>
 
@@ -586,6 +615,9 @@
 
   <script>
     gsap.registerPlugin(ScrollTrigger);
+    
+    // Replace with your deployed Google Apps Script Web App URL (ends with /exec)
+    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzIjuet4gxxD3LvkvByzy9Sxb_cWK-Nk7c0SEVxO_HuycgEMe4XKM0TDaWm35RIhsGXvw/exec';
 
     // ✨ NEW: DYNAMIC WORD POSITIONING LOGIC
     const deskGraphic = document.querySelector('.desk-graphic');
@@ -746,7 +778,22 @@
         showError();
       } else {
         hideError();
-        console.log('Valid email submitted:', email);
+        const data = new FormData();
+        data.append('email', email);
+        
+        if (WEB_APP_URL && WEB_APP_URL.startsWith('https')) {
+          fetch(WEB_APP_URL, {
+            method: 'POST',
+            body: new URLSearchParams({ email }),
+            mode: 'no-cors'
+          });
+        }
+        
+        emailInput.value = '';
+        const subscribeText = document.querySelector('.subscribe-text');
+        if (subscribeText) {
+          subscribeText.textContent = 'thanks! you\'re on the list';
+        }
       }
     });
 
