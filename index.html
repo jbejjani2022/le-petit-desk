@@ -120,16 +120,19 @@
     .mission, .upcoming, .past, .subscribe {
       opacity: 0;
       transform: translateY(100px);
+      will-change: transform, opacity; /* <-- ADDED FOR PERFORMANCE */
     }
 
     .mission p {
       opacity: 0;
       transform: translateY(80px);
+      will-change: transform, opacity; /* <-- ADDED FOR PERFORMANCE */
     }
 
     .subscribe form {
       opacity: 0;
       transform: translateY(80px);
+      will-change: transform, opacity; /* <-- ADDED FOR PERFORMANCE */
     }
 
     .event {
@@ -137,6 +140,7 @@
       font-size: 1.7rem;
       opacity: 0;
       transform: translateY(60px);
+      will-change: transform, opacity; /* <-- ADDED FOR PERFORMANCE */
     }
 
     .event.upcoming-title, .event.past-title, .event.mission-title {
@@ -801,73 +805,69 @@
       hideError();
     });
 
-    // Dot Navigation functionality
+    // ✅ NEW: OPTIMIZED DOT NAVIGATION LOGIC
     const dots = document.querySelectorAll('.dot-nav .dot');
     const sections = document.querySelectorAll('section');
 
-    function updateActiveDot() {
-      const scrollPosition = window.scrollY + window.innerHeight / 2;
-      
-      sections.forEach((section, index) => {
-        const sectionTop = section.offsetTop;
-        const sectionBottom = sectionTop + section.offsetHeight;
-        
-        if (scrollPosition >= sectionTop && scrollPosition <= sectionBottom) {
-          dots.forEach(dot => dot.classList.remove('active'));
-          if (dots[index]) {
-            dots[index].classList.add('active');
+    dots.forEach((dot, index) => {
+      const section = sections[index];
+      if (!section) return;
+
+      // Use ScrollTrigger to efficiently toggle the active class
+      ScrollTrigger.create({
+        trigger: section,
+        start: "top center",
+        end: "bottom center",
+        onToggle: self => {
+          if (self.isActive) {
+            dots.forEach(d => d.classList.remove('active'));
+            dot.classList.add('active');
           }
         }
       });
-    }
 
-    function scrollElementToCenter(element) {
-      const rect = element.getBoundingClientRect();
-      const absoluteTop = window.scrollY + rect.top;
-      const targetTop = absoluteTop + rect.height / 2 - window.innerHeight / 2;
-      window.scrollTo({ top: Math.max(0, targetTop), behavior: 'smooth' });
-    }
-
-    dots.forEach((dot, index) => {
+      // Click-to-scroll logic
       dot.addEventListener('click', () => {
-        const targetSection = sections[index];
-        if (!targetSection) return;
-
-        if (index === 1 || index === 2 || index === 3) {
-          scrollElementToCenter(targetSection);
-        } else {
-          targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
+        section.scrollIntoView({
+            behavior: 'smooth',
+            block: 'center',
+            inline: 'center'
+        });
       });
     });
 
-    window.addEventListener('scroll', updateActiveDot);
-    
+    // ✅ NEW: OPTIMIZED NAV EXPANSION LOGIC
     const dotNav = document.querySelector('.dot-nav');
-    let shrinkTimeout = null;
+    let shrinkTimeout;
 
-    function expandDotNav() {
-      if (window.matchMedia('(max-width: 768px)').matches) return;
-      dotNav.classList.add('expanded');
-      if (shrinkTimeout) clearTimeout(shrinkTimeout);
-      shrinkTimeout = setTimeout(() => {
-        dotNav.classList.remove('expanded');
-      }, 1200);
-    }
+    ScrollTrigger.create({
+      trigger: "body",
+      onScrollStart: () => {
+        if (window.matchMedia('(min-width: 769px)').matches) {
+            clearTimeout(shrinkTimeout);
+            dotNav.classList.add('expanded');
+        }
+      },
+      onScrollEnd: () => {
+        if (window.matchMedia('(min-width: 769px)').matches) {
+            shrinkTimeout = setTimeout(() => {
+                dotNav.classList.remove('expanded');
+            }, 1200);
+        }
+      }
+    });
 
-    window.addEventListener('scroll', expandDotNav, { passive: true });
+    // Keep the hover effects, they are not a performance issue
     dotNav.addEventListener('mouseenter', () => {
-      if (!window.matchMedia('(max-width: 768px)').matches) {
+      if (window.matchMedia('(min-width: 769px)').matches) {
         dotNav.classList.add('expanded');
       }
     });
     dotNav.addEventListener('mouseleave', () => {
-      if (!window.matchMedia('(max-width: 768px)').matches) {
+      if (window.matchMedia('(min-width: 769px)').matches) {
         dotNav.classList.remove('expanded');
       }
     });
-    
-    updateActiveDot();
 
     // Turtle animation trigger
     function startTurtleAnimation() {
