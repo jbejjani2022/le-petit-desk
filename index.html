@@ -12,7 +12,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
   <style>
     :root {
-      --bg: #422d2d;
+      --bg: #3c2626;
       --text: #fdf6ec;
       --accent: #df7829;
       --font-family: 'Outfit', sans-serif;
@@ -349,6 +349,52 @@
       padding-right: clamp(1rem, 3vw, 2rem);
     }
 
+    /* Footer */
+    .footer {
+      background: #281c1c; /* darker brown than --bg */
+      color: var(--text);
+      text-align: center;
+      padding: 2rem 0 1.1rem;
+      margin-top: 2rem;
+    }
+
+    .footer > div {
+      width: min(var(--content-max), calc(100vw - var(--rail-safe-space)));
+      margin: 0 auto;
+      padding-left: clamp(1rem, 3vw, 2rem);
+      padding-right: clamp(1rem, 3vw, 2rem);
+    }
+
+    .footer-title {
+      font-size: 1.6rem;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+
+    .footer-subtitle {
+      font-size: 1.1rem;
+      color: rgba(253, 246, 236, 0.9);
+    }
+
+    .footer a {
+      color: var(--text);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(253, 246, 236, 0.35);
+      transition: color 0.3s ease, border-bottom-color 0.3s ease;
+    }
+
+    .footer a:hover {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+    }
+
+    .footer-turtle {
+      display: block;
+      margin: 0.9rem auto 0;
+      width: 52px;
+      height: 52px;
+    }
+
     /* Turtle Animation */
     .turtle-container {
       position: relative;
@@ -594,9 +640,7 @@
   <section class="past">
     <div>
       <div class="event past-title">previously</div>
-      <div class="event">jun 5 — jazz jam</div>
-      <div class="event">apr 10 — chamber music reading</div>
-      <div class="event">feb 22 — house set with dj ren</div>
+      <div class="event">nothing...yet</div>
     </div>
   </section>
 
@@ -609,12 +653,21 @@
     </form>
   </section>
 
+  <footer class="footer">
+    <div>
+      <div class="footer-title">le petite desk</div>
+      <div class="footer-subtitle">brought to you by the team behind the <a href="https://goldenarmtheater.com" target="_blank" rel="noopener noreferrer">golden arm theater</a></div>
+      <img class="footer-turtle" src="static/turtle_light/sprite_turtle0.png" alt="turtle" width="32" height="32" />
+    </div>
+  </footer>
+
   <nav class="dot-nav">
     <div class="dot" data-section="landing"></div>
     <div class="dot" data-section="mission"></div>
     <div class="dot" data-section="upcoming"></div>
     <div class="dot" data-section="past"></div>
     <div class="dot" data-section="subscribe"></div>
+    <div class="dot" data-section="footer"></div>
   </nav>
 
   <script>
@@ -807,7 +860,7 @@
 
     // ✅ NEW: OPTIMIZED DOT NAVIGATION LOGIC
     const dots = document.querySelectorAll('.dot-nav .dot');
-    const sections = document.querySelectorAll('section');
+    const sections = document.querySelectorAll('section, .footer');
 
     dots.forEach((dot, index) => {
       const section = sections[index];
