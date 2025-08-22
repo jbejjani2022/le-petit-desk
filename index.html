@@ -68,6 +68,7 @@
       min-height: 100vh;
       align-items: center;
       justify-content: center;
+      padding-bottom: 0rem;
     }
 
     .subscribe form {
@@ -355,7 +356,7 @@
       color: var(--text);
       text-align: center;
       padding: 2rem 0 1.1rem;
-      margin-top: 2rem;
+      margin-top: 0rem;
     }
 
     .footer > div {
@@ -667,7 +668,6 @@
     <div class="dot" data-section="upcoming"></div>
     <div class="dot" data-section="past"></div>
     <div class="dot" data-section="subscribe"></div>
-    <div class="dot" data-section="footer"></div>
   </nav>
 
   <script>
@@ -860,7 +860,7 @@
 
     // ✅ NEW: OPTIMIZED DOT NAVIGATION LOGIC
     const dots = document.querySelectorAll('.dot-nav .dot');
-    const sections = document.querySelectorAll('section, .footer');
+    const sections = document.querySelectorAll('section');
 
     dots.forEach((dot, index) => {
       const section = sections[index];
@@ -881,10 +881,21 @@
 
       // Click-to-scroll logic
       dot.addEventListener('click', () => {
+        if (index === sections.length - 1) {
+          const footer = document.querySelector('.footer');
+          if (footer) {
+            footer.scrollIntoView({
+              behavior: 'smooth',
+              block: 'center',
+              inline: 'center'
+            });
+            return;
+          }
+        }
         section.scrollIntoView({
-            behavior: 'smooth',
-            block: 'center',
-            inline: 'center'
+          behavior: 'smooth',
+          block: 'center',
+          inline: 'center'
         });
       });
     });
