@@ -20,10 +20,15 @@
       background: var(--bg);
       color: var(--text);
       padding: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
     }
 
     .container {
       max-width: 800px;
+      width: 100%;
       margin: 0 auto;
     }
 
@@ -32,6 +37,49 @@
       color: var(--accent);
       font-size: 1.5rem;
       margin-bottom: 2rem;
+    }
+    
+    /* Login Form Styles */
+    #login-container {
+      background: rgba(253, 246, 236, 0.05);
+      border: 1px solid rgba(253, 246, 236, 0.2);
+      border-radius: 8px;
+      padding: 2rem;
+      max-width: 400px;
+      margin: 0 auto;
+    }
+
+    #login-container h2 {
+      text-align: center;
+      color: var(--accent);
+      margin-top: 0;
+    }
+    
+    input[type="email"], input[type="password"] {
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid var(--text);
+      color: var(--text);
+      font-family: var(--font-family);
+      font-weight: 300;
+      font-size: 1.1rem;
+      outline: none;
+      padding: 0.8rem;
+      width: 100%;
+      box-sizing: border-box;
+      margin-bottom: 1.5rem;
+      transition: border-bottom-color 0.3s ease;
+    }
+    
+    input[type="email"]:focus, input[type="password"]:focus {
+      border-bottom-color: var(--accent);
+    }
+    
+    #login-error {
+      color: #ff6b6b;
+      text-align: center;
+      min-height: 1.2em;
+      margin-top: 1rem;
     }
 
     .control-panel {
@@ -68,8 +116,12 @@
       font-weight: 500;
       cursor: pointer;
       transition: all 0.3s ease;
-      margin-right: 1rem;
-      margin-bottom: 0.5rem;
+      margin: 0 0.5rem 0.5rem;
+    }
+    
+    #login-button {
+      width: 100%;
+      margin: 0;
     }
 
     button:hover {
@@ -95,6 +147,8 @@
       padding: 6px 12px;
       font-size: 0.8rem;
       margin: 0 0 0 8px;
+      white-space: nowrap;
+      flex-shrink: 0;
     }
 
     #qrcode {
@@ -139,28 +193,39 @@
       padding: 2rem;
       border-radius: 12px;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      max-width: 90vw;
+      max-height: 90vh;
+      box-sizing: border-box;
+      overflow: hidden;
     }
 
     .qr-modal canvas {
       border-radius: 8px;
+      width: 100%;
+      height: auto;
+      max-width: 80vw;
+      max-height: 80vh;
     }
 
     .qr-close {
       position: absolute;
-      top: -10px;
-      right: -10px;
+      top: 8px;
+      right: 8px;
       background: var(--accent);
       color: var(--bg);
       border: none;
-      width: 30px;
-      height: 30px;
+      width: 28px;
+      height: 28px;
       border-radius: 50%;
       cursor: pointer;
-      font-size: 1.2rem;
-      font-weight: bold;
-      display: flex;
+      font-size: 1rem;
+      font-weight: 700;
+      display: inline-flex;
       align-items: center;
       justify-content: center;
+      line-height: 1;
+      padding: 0;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
     }
 
     .qr-placeholder {
@@ -171,6 +236,7 @@
     .turtle-list {
       list-style: none;
       padding: 0;
+      width: 100%;
     }
 
     .turtle-item {
@@ -188,6 +254,8 @@
       display: flex;
       align-items: center;
       gap: 1rem;
+      flex: 1;
+      min-width: 0;
     }
 
     .turtle-sprite {
@@ -206,6 +274,9 @@
     .turtle-name {
       font-size: 1.1rem;
       font-weight: 500;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     .turtle-meta {
@@ -241,33 +312,28 @@
     }
 
     @media (max-width: 768px) {
-      body {
-        padding: 1rem;
-      }
-
-      h1 {
-        font-size: 2rem;
-      }
-
-      .turtle-item {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0.5rem;
-      }
-
-      .turtle-info {
-        width: 100%;
-      }
-
-      button.small {
-        margin: 0.5rem 0 0 0;
-      }
+      body { padding: 1rem; }
+      h1 { font-size: 2rem; }
+      .turtle-item { flex-direction: row; align-items: center; gap: 0.5rem; }
+      .turtle-info { flex: 1; min-width: 0; }
+      button.small { margin: 0 0 0 8px; }
+      .qr-modal-content { width: 90vw; max-width: 90vw; max-height: 90vh; padding: 1rem; }
+      .qr-modal canvas { max-width: 100%; max-height: 80vh; }
+      .qr-close { top: 8px; right: 8px; }
     }
   </style>
 </head>
 <body>
   <div class="container">
     <h1>Le Petite Desk - Admin</h1>
+
+    <div id="login-container">
+      <h2>Login</h2>
+      <input type="email" id="admin-email" placeholder="Email" autocomplete="email" />
+      <input type="password" id="admin-password" placeholder="Password" autocomplete="current-password" />
+      <button id="login-button">Sign In</button>
+      <p id="login-error"></p>
+    </div>
     
     <div class="control-panel" id="controlPanel">
       <div class="session-status" id="sessionStatus">
@@ -296,7 +362,6 @@
     </div>
   </div>
 
-  <!-- QR Code Modal -->
   <div id="qrModal" class="qr-modal">
     <div class="qr-modal-content">
       <button class="qr-close">&times;</button>
@@ -304,20 +369,19 @@
     </div>
   </div>
 
-  <!-- Load admin configuration (gitignored) -->
-  <script src="admin-config.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
   <script type="module">
-    // Firebase configuration
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
-    import { getDatabase, ref, set, onValue, remove, get } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-database.js";
+    // Firebase SDKs
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getDatabase, ref, set, onValue, remove } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyB3iNIa3Yp9C1HQpEEjbu6_x5EK93aU9eo",
       authDomain: "le-petite-desk-14f1a.firebaseapp.com",
       databaseURL: "https://le-petite-desk-14f1a-default-rtdb.firebaseio.com",
       projectId: "le-petite-desk-14f1a",
-      storageBucket: "le-petite-desk-14f1a.firebasestorage.app",
+      storageBucket: "le-petite-desk-14f1a.appspot.com",
       messagingSenderId: "477144999138",
       appId: "1:477144999138:web:f476c84f3c745ce9bceabb",
       measurementId: "G-ERHPGQ2CFM"
@@ -325,87 +389,55 @@
 
     const app = initializeApp(firebaseConfig);
     const database = getDatabase(app);
+    const auth = getAuth();
 
-    // Authentication - password loaded from external config
-    let isAuthenticated = false;
+    // DOM Elements
+    const loginContainer = document.getElementById('login-container');
+    const controlPanel = document.getElementById('controlPanel');
+    const loginButton = document.getElementById('login-button');
+    const emailInput = document.getElementById('admin-email');
+    const passwordInput = document.getElementById('admin-password');
+    const loginError = document.getElementById('login-error');
 
-    function authenticate() {
-      // Check if config is loaded
-      if (!window.ADMIN_CONFIG || !window.ADMIN_CONFIG.PASSWORD) {
-        alert("Admin configuration not loaded. Please check your setup.");
-        return;
-      }
-      
-      const enteredPassword = prompt("Enter admin password:");
-      if (enteredPassword === window.ADMIN_CONFIG.PASSWORD) {
-        isAuthenticated = true;
-        document.getElementById('controlPanel').style.display = 'block';
-        initializeAdmin();
-      } else {
-        alert("Incorrect Password");
-      }
-    }
+    // Authentication Logic
+    loginButton.addEventListener('click', () => {
+      const email = emailInput.value;
+      const password = passwordInput.value;
+      loginError.textContent = ''; // Clear previous errors
 
-    // Initialize admin panel
-    function initializeAdmin() {
+      signInWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          console.log("Admin signed in:", userCredential.user.uid);
+          loginContainer.style.display = 'none';
+          controlPanel.style.display = 'block';
+          initializeAdminPanel();
+        })
+        .catch((error) => {
+          console.error("Login failed:", error.message);
+          loginError.textContent = "Login failed. Please check your credentials.";
+        });
+    });
+
+    // Initialize admin panel only after successful login
+    function initializeAdminPanel() {
       const startSessionBtn = document.getElementById('startSessionBtn');
       const endSessionBtn = document.getElementById('endSessionBtn');
       const qrcodeDiv = document.getElementById('qrcode');
       const turtleList = document.getElementById('turtleList');
       const sessionStatus = document.getElementById('sessionStatus');
-
-      let currentSessionId = null;
+      const modal = document.getElementById('qrModal');
+      const closeBtn = document.querySelector('.qr-close');
 
       // Listen for session changes
       onValue(ref(database, 'session'), (snapshot) => {
         const session = snapshot.val();
         if (session && session.isActive) {
-          currentSessionId = session.sessionId;
           sessionStatus.textContent = `Session Active (ID: ${session.sessionId})`;
           sessionStatus.className = 'session-status session-active';
           startSessionBtn.disabled = true;
           endSessionBtn.disabled = false;
-          
-          // Generate QR code
-          const joinUrl = `${window.location.origin}/join.html?session=${session.sessionId}`;
-          qrcodeDiv.innerHTML = '';
-          
-          // Check if QRious is available
-          if (typeof QRious !== 'undefined') {
-            try {
-              const canvas = document.createElement('canvas');
-              const qr = new QRious({
-                element: canvas,
-                value: joinUrl,
-                size: 200,
-                padding: 10
-              });
-              
-              // Add click handler to show modal
-              canvas.addEventListener('click', () => {
-                showQrModal(joinUrl);
-              });
-              
-              qrcodeDiv.appendChild(canvas);
-            } catch (error) {
-              console.error('QR Code generation error:', error);
-              showFallbackUrl();
-            }
-          } else {
-            showFallbackUrl();
-          }
-          
-          function showFallbackUrl() {
-            qrcodeDiv.innerHTML = `
-              <div style="padding: 1rem; text-align: center;">
-                <p style="color: var(--text); margin-bottom: 1rem;">Join URL:</p>
-                <p style="color: var(--accent); font-size: 0.9rem; word-break: break-all;">${joinUrl}</p>
-                <p style="color: rgba(253, 246, 236, 0.6); font-size: 0.8rem; margin-top: 1rem;">Share this URL with participants</p>
-              </div>
-            `;
-          }
+          generateQrCode(`${window.location.origin}/join.html?session=${session.sessionId}`);
         } else {
-          currentSessionId = null;
           sessionStatus.textContent = 'Session Inactive';
           sessionStatus.className = 'session-status session-inactive';
           startSessionBtn.disabled = false;
@@ -416,126 +448,85 @@
 
       // Listen for turtle changes
       onValue(ref(database, 'turtles'), (snapshot) => {
-        const turtles = snapshot.val();
-        renderTurtles(turtles);
+        renderTurtles(snapshot.val());
       });
 
-      // Start session
+      // Event listeners for session control
       startSessionBtn.addEventListener('click', async () => {
         const sessionId = Date.now().toString();
         await set(ref(database, 'turtles'), null);
-        await set(ref(database, 'session'), {
-          isActive: true,
-          sessionId: sessionId
-        });
+        await set(ref(database, 'session'), { isActive: true, sessionId: sessionId });
       });
 
-      // End session
       endSessionBtn.addEventListener('click', async () => {
-        await set(ref(database, 'session'), {
-          isActive: false,
-          sessionId: null
-        });
+        await set(ref(database, 'session'), { isActive: false, sessionId: null });
         await set(ref(database, 'turtles'), null);
       });
 
-      function renderTurtles(turtles) {
-        if (!turtles) {
-          turtleList.innerHTML = '<li class="empty-state">No active turtles</li>';
-          return;
+      function generateQrCode(url) {
+        qrcodeDiv.innerHTML = ''; // Clear placeholder
+        try {
+          const canvas = document.createElement('canvas');
+          new QRious({ element: canvas, value: url, size: 200, padding: 10 });
+          canvas.addEventListener('click', () => showQrModal(url));
+          qrcodeDiv.appendChild(canvas);
+        } catch (error) {
+          console.error('QR Code generation error:', error);
+          qrcodeDiv.innerHTML = `<div style="padding: 1rem; text-align: center;"><p>Join URL:</p><p style="color: var(--accent); font-size: 0.9rem; word-break: break-all;">${url}</p></div>`;
         }
+      }
 
-        const turtleEntries = Object.entries(turtles);
+      function renderTurtles(turtles) {
+        const turtleEntries = turtles ? Object.entries(turtles) : [];
         if (turtleEntries.length === 0) {
           turtleList.innerHTML = '<li class="empty-state">No active turtles</li>';
           return;
         }
 
-        turtleList.innerHTML = turtleEntries.map(([turtleId, turtleData]) => {
-          const spawnDate = new Date(turtleData.spawnTime);
-          const turtleSprites = [
-            'static/turtle_spawn/turtle_0/sprite_0.png',
-            'static/turtle_spawn/turtle_1/sprite_0.png', 
-            'static/turtle_spawn/turtle_2/sprite_0.png'
-          ];
-
+        turtleList.innerHTML = turtleEntries.map(([turtleId, data]) => {
+          const spawnDate = new Date(data.spawnTime);
+          const spritePath = `static/turtle_spawn/turtle_${data.turtleType}/sprite_0.png`;
           return `
             <li class="turtle-item">
               <div class="turtle-info">
-                <div class="turtle-sprite" style="background-image: url('${turtleSprites[turtleData.turtleType]}')"></div>
+                <div class="turtle-sprite" style="background-image: url('${spritePath}')"></div>
                 <div class="turtle-details">
-                  <div class="turtle-name">${turtleData.name}</div>
+                  <div class="turtle-name">${data.name}</div>
                   <div class="turtle-meta">${spawnDate.toLocaleTimeString()}</div>
                 </div>
               </div>
-              <button class="danger small" onclick="removeTurtle('${turtleId}')">Remove</button>
-            </li>
-          `;
+              <button class="danger small" data-turtle-id="${turtleId}">Remove</button>
+            </li>`;
         }).join('');
       }
-
-      // QR Modal functionality
-      function showQrModal(url) {
-        const modal = document.getElementById('qrModal');
-        const modalQrCode = document.getElementById('modalQrCode');
-        
-        // Clear previous content
-        modalQrCode.innerHTML = '';
-        
-        // Create larger QR code for modal
-        if (typeof QRious !== 'undefined') {
-          try {
-            const canvas = document.createElement('canvas');
-            const qr = new QRious({
-              element: canvas,
-              value: url,
-              size: 400,
-              padding: 20
-            });
-            modalQrCode.appendChild(canvas);
-          } catch (error) {
-            console.error('Modal QR Code generation error:', error);
-            modalQrCode.innerHTML = `
-              <div style="padding: 2rem; text-align: center; color: #333;">
-                <p style="margin-bottom: 1rem; font-weight: bold;">Join URL:</p>
-                <p style="color: var(--accent); font-size: 1.1rem; word-break: break-all;">${url}</p>
-              </div>
-            `;
+      
+      // Delegated event listener for remove buttons
+      turtleList.addEventListener('click', (e) => {
+        if (e.target && e.target.matches('button.danger.small')) {
+          const turtleId = e.target.dataset.turtleId;
+          if (turtleId) {
+            remove(ref(database, `turtles/${turtleId}`));
           }
         }
-        
+      });
+
+      function showQrModal(url) {
+        const modalQrCode = document.getElementById('modalQrCode');
+        modalQrCode.innerHTML = '';
+        try {
+          const canvas = document.createElement('canvas');
+          new QRious({ element: canvas, value: url, size: 400, padding: 20 });
+          modalQrCode.appendChild(canvas);
+        } catch (error) {
+          modalQrCode.innerHTML = `<div style="padding: 2rem; text-align: center; color: #333;"><p>Join URL:</p><p style="color: var(--accent); font-size: 1.1rem; word-break: break-all;">${url}</p></div>`;
+        }
         modal.style.display = 'block';
       }
       
-      // Close modal functionality
-      const modal = document.getElementById('qrModal');
-      const closeBtn = document.querySelector('.qr-close');
-      
-      closeBtn.addEventListener('click', () => {
-        modal.style.display = 'none';
-      });
-      
-      modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
-          modal.style.display = 'none';
-        }
-      });
-      
-      // Close modal on Escape key
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && modal.style.display === 'block') {
-          modal.style.display = 'none';
-        }
-      });
-
-      // Make removeTurtle available globally
-      window.removeTurtle = async (turtleId) => {
-        await remove(ref(database, `turtles/${turtleId}`));
-      };
+      closeBtn.addEventListener('click', () => { modal.style.display = 'none'; });
+      modal.addEventListener('click', (e) => { if (e.target === modal) modal.style.display = 'none'; });
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape') modal.style.display = 'none'; });
     }
-
-    // Start authentication flow
-    authenticate();
   </script>
 </body>
 </html>
