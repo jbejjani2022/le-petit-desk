@@ -43,9 +43,9 @@
     }
 
     .form-container {
-      background: rgba(253, 246, 236, 0.05);
-      border: 1px solid rgba(253, 246, 236, 0.2);
-      border-radius: 12px;
+      background: transparent;
+      border: none;
+      border-radius: 0;
       padding: 2rem;
     }
 
@@ -67,7 +67,7 @@
       width: 100%;
       background: transparent;
       border: none;
-      border-bottom: 2px solid rgba(253, 246, 236, 0.3);
+      border-bottom: 2px solid var(--text);
       color: var(--text);
       font-family: var(--font-family);
       font-weight: 300;
@@ -77,6 +77,12 @@
       transition: border-bottom-color 0.3s ease;
       box-sizing: border-box;
       caret-color: var(--text);
+      border-radius: 0;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      box-shadow: none;
+      background-clip: padding-box;
     }
 
     input[type="text"]:focus,
@@ -86,7 +92,7 @@
 
     input[type="text"]::placeholder,
     input[type="email"]::placeholder {
-      color: rgba(253, 246, 236, 0.4);
+      color: rgba(253, 246, 236, 0.5);
     }
 
     .turtle-selection {
