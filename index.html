@@ -14,7 +14,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>le petite desk</title>
-  <link rel="icon" type="image/png" href="static/turtle_light/sprite_turtle0.png">
+  <link rel="icon" type="image/png" href="static/turtle_base/sprite_0.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300&family=Space+Grotesk:wght@300&family=Inter:wght@300&family=Poppins:wght@200&family=Epilogue:wght@200&display=swap" rel="stylesheet">
@@ -440,7 +440,7 @@
       position: absolute;
       width: 90px;
       height: 90px;
-      background-image: url('static/turtle_light/sprite_turtle0.png');
+      background-image: url('static/turtle_base/sprite_0.png');
       background-size: contain;
       background-repeat: no-repeat;
       background-position: center;
@@ -450,7 +450,7 @@
     }
 
     .turtle.animate {
-      animation: walkAcrossWithDelay 30s linear infinite, walkSprite 1.4s steps(2) infinite;
+      animation: walkAcrossWithDelay 30s linear infinite, walkSpriteBase 1.4s steps(2) infinite;
     }
 
     @keyframes walkAcrossWithDelay {
@@ -462,9 +462,92 @@
       100% { left: calc(100% + 60px); opacity: 0; }
     }
 
-    @keyframes walkSprite {
-      0% { background-image: url('static/turtle_light/sprite_turtle0.png'); }
-      50% { background-image: url('static/turtle_light/sprite_turtle1.png'); }
+    @keyframes walkSpriteBase {
+      0% { background-image: url('static/turtle_base/sprite_0.png'); }
+      50% { background-image: url('static/turtle_base/sprite_1.png'); }
+    }
+
+    /* Concert Turtles CSS */
+    .concert-turtle {
+      position: absolute;
+      width: 90px;
+      height: 90px;
+      will-change: transform;
+      z-index: 5;
+    }
+
+    .turtle-name {
+      position: absolute;
+      top: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: var(--text);
+      font-size: 14px;
+      white-space: nowrap;
+      font-weight: 500;
+      text-shadow: 1px 1px 2px rgba(60, 38, 38, 0.8);
+      pointer-events: none;
+    }
+
+    .turtle-sprite {
+      width: 90px;
+      height: 90px;
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+    }
+
+    .turtle-0 .turtle-sprite {
+      background-image: url('static/turtle_spawn/turtle_0/sprite_0.png');
+    }
+
+    .turtle-0 .turtle-sprite:nth-child(even) {
+      background-image: url('static/turtle_spawn/turtle_0/sprite_1.png');
+    }
+
+    .turtle-1 .turtle-sprite {
+      background-image: url('static/turtle_spawn/turtle_1/sprite_0.png');
+    }
+
+    .turtle-1 .turtle-sprite:nth-child(even) {
+      background-image: url('static/turtle_spawn/turtle_1/sprite_1.png');
+    }
+
+    .turtle-2 .turtle-sprite {
+      background-image: url('static/turtle_spawn/turtle_2/sprite_0.png');
+    }
+
+    .turtle-2 .turtle-sprite:nth-child(even) {
+      background-image: url('static/turtle_spawn/turtle_2/sprite_1.png');
+    }
+
+    /* Animated walkSprite keyframes for concert turtles */
+
+    .turtle-0 .turtle-sprite {
+      animation: walkSprite0 1.4s steps(2) infinite;
+    }
+
+    .turtle-1 .turtle-sprite {
+      animation: walkSprite1 1.4s steps(2) infinite;
+    }
+
+    .turtle-2 .turtle-sprite {
+      animation: walkSprite2 1.4s steps(2) infinite;
+    }
+
+    @keyframes walkSprite0 {
+      0% { background-image: url('static/turtle_spawn/turtle_0/sprite_0.png'); }
+      50% { background-image: url('static/turtle_spawn/turtle_0/sprite_1.png'); }
+    }
+
+    @keyframes walkSprite1 {
+      0% { background-image: url('static/turtle_spawn/turtle_1/sprite_0.png'); }
+      50% { background-image: url('static/turtle_spawn/turtle_1/sprite_1.png'); }
+    }
+
+    @keyframes walkSprite2 {
+      0% { background-image: url('static/turtle_spawn/turtle_2/sprite_0.png'); }
+      50% { background-image: url('static/turtle_spawn/turtle_2/sprite_1.png'); }
     }
 
 
@@ -547,7 +630,7 @@
       /* Turtle responsive adjustments */
       .turtle-container { height: 95px; margin-top: 1.5rem; }
       .turtle { width: 72px; height: 72px; }
-      .turtle.animate { animation: walkAcrossWithDelay 24s linear infinite, walkSprite 1.4s steps(2) infinite; }
+      .turtle.animate { animation: walkAcrossWithDelay 24s linear infinite, walkSpriteBase 1.4s steps(2) infinite; }
     }
 
     @media (max-width: 480px) {
@@ -626,7 +709,7 @@
       /* Turtle responsive adjustments for small mobile */
       .turtle-container { height: 80px; margin-top: 1rem; }
       .turtle { width: 60px; height: 60px; }
-      .turtle.animate { animation: walkAcrossWithDelay 20s linear infinite, walkSprite 1.4s steps(2) infinite; }
+      .turtle.animate { animation: walkAcrossWithDelay 20s linear infinite, walkSpriteBase 1.4s steps(2) infinite; }
     }
   </style>
 </head>
@@ -689,7 +772,7 @@
     <div>
       <div class="footer-title">le petite desk</div>
       <div class="footer-subtitle">brought to you by the team behind the <a href="https://goldenarmtheater.com" target="_blank" rel="noopener noreferrer">golden arm theater</a></div>
-      <img class="footer-turtle" src="static/turtle_light/sprite_turtle0.png" alt="turtle" width="32" height="32" />
+      <img class="footer-turtle" src="static/turtle_base/sprite_0.png" alt="turtle" width="32" height="32" />
     </div>
   </footer>
 
@@ -977,6 +1060,210 @@
       start: "top 80%",
       onEnter: startTurtleAnimation,
       once: true
+    });
+  </script>
+
+  <script type="module">
+    // Firebase configuration for concert turtles
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+    import { getDatabase, ref, onValue, off } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyB3iNIa3Yp9C1HQpEEjbu6_x5EK93aU9eo",
+      authDomain: "le-petite-desk-14f1a.firebaseapp.com",
+      databaseURL: "https://le-petite-desk-14f1a-default-rtdb.firebaseio.com",
+      projectId: "le-petite-desk-14f1a",
+      storageBucket: "le-petite-desk-14f1a.firebasestorage.app",
+      messagingSenderId: "477144999138",
+      appId: "1:477144999138:web:f476c84f3c745ce9bceabb",
+      measurementId: "G-ERHPGQ2CFM"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
+
+    // Concert turtle system
+    let activeTurtles = {};
+    let turtleListeners = null;
+    let isSessionActive = false;
+
+    const landingSection = document.querySelector('section.landing');
+
+    // Wandering animation function
+    function wander(turtleElement) {
+      if (!turtleElement.parentNode || !isSessionActive) {
+        return; // Stop if turtle was removed or session ended
+      }
+
+      const landingRect = landingSection.getBoundingClientRect();
+      const turtleSize = 90;
+      
+      // Calculate bounds within the landing section
+      const minX = 50;
+      const maxX = landingRect.width - turtleSize - 50;
+      const minY = 50;
+      const maxY = landingRect.height - turtleSize - 50;
+
+      // Random position
+      const newX = Math.random() * (maxX - minX) + minX;
+      const newY = Math.random() * (maxY - minY) + minY;
+      
+      // Random duration (8-15 seconds)
+      const duration = Math.random() * 7 + 8;
+
+      // Determine direction for flipping
+      const currentX = gsap.getProperty(turtleElement, "x") || 0;
+      const scaleX = newX > currentX ? 1 : -1;
+
+      // GSAP animation
+      gsap.to(turtleElement, {
+        x: newX,
+        y: newY,
+        scaleX: scaleX,
+        duration: duration,
+        ease: "none",
+        onComplete: () => wander(turtleElement)
+      });
+    }
+
+    // Spawn turtle function
+    function spawnTurtle(turtleId, turtleData) {
+      if (activeTurtles[turtleId]) {
+        return; // Already exists
+      }
+
+      // Create turtle container
+      const turtleContainer = document.createElement('div');
+      turtleContainer.className = `concert-turtle turtle-${turtleData.turtleType}`;
+
+      // Create sprite div
+      const spriteDiv = document.createElement('div');
+      spriteDiv.className = 'turtle-sprite';
+      
+      // Create name label
+      const nameSpan = document.createElement('span');
+      nameSpan.className = 'turtle-name';
+      nameSpan.textContent = turtleData.name;
+
+      turtleContainer.appendChild(spriteDiv);
+      turtleContainer.appendChild(nameSpan);
+
+      // Set initial random position
+      const landingRect = landingSection.getBoundingClientRect();
+      const initialX = Math.random() * (landingRect.width - 90);
+      const initialY = Math.random() * (landingRect.height - 90);
+      
+      gsap.set(turtleContainer, { 
+        x: initialX, 
+        y: initialY,
+        opacity: 0,
+        scale: 0
+      });
+
+      // Add to DOM
+      landingSection.appendChild(turtleContainer);
+
+      // Entrance animation
+      gsap.to(turtleContainer, {
+        opacity: 1,
+        scale: 1,
+        duration: 0.5,
+        ease: "back.out(1.7)",
+        onComplete: () => {
+          // Start wandering
+          wander(turtleContainer);
+        }
+      });
+
+      // Store in activeTurtles
+      activeTurtles[turtleId] = {
+        element: turtleContainer,
+        animation: null // GSAP will handle the animation internally
+      };
+    }
+
+    // Remove turtle function
+    function removeTurtle(turtleId) {
+      if (!activeTurtles[turtleId]) {
+        return;
+      }
+
+      const turtle = activeTurtles[turtleId];
+      
+      // Graceful exit animation
+      gsap.to(turtle.element, {
+        opacity: 0,
+        scale: 0,
+        duration: 1,
+        ease: "back.in(1.7)",
+        onComplete: () => {
+          // Kill any ongoing animations
+          gsap.killTweensOf(turtle.element);
+          
+          // Remove from DOM
+          if (turtle.element.parentNode) {
+            turtle.element.remove();
+          }
+        }
+      });
+
+      // Remove from tracking
+      delete activeTurtles[turtleId];
+    }
+
+    // Clear all turtles
+    function clearAllTurtles() {
+      Object.keys(activeTurtles).forEach(turtleId => {
+        removeTurtle(turtleId);
+      });
+      activeTurtles = {};
+    }
+
+    // Firebase listeners
+    function startTurtleListeners() {
+      // Listen for turtle additions
+      onValue(ref(database, 'turtles'), (snapshot) => {
+        const turtles = snapshot.val();
+        
+        if (!turtles) {
+          clearAllTurtles();
+          return;
+        }
+
+        // Handle new turtles
+        Object.entries(turtles).forEach(([turtleId, turtleData]) => {
+          if (!activeTurtles[turtleId]) {
+            spawnTurtle(turtleId, turtleData);
+          }
+        });
+
+        // Handle removed turtles
+        Object.keys(activeTurtles).forEach(turtleId => {
+          if (!turtles[turtleId]) {
+            removeTurtle(turtleId);
+          }
+        });
+      });
+    }
+
+    function stopTurtleListeners() {
+      off(ref(database, 'turtles'));
+      clearAllTurtles();
+    }
+
+    // Session state listener
+    onValue(ref(database, 'session/isActive'), (snapshot) => {
+      const sessionActive = snapshot.val();
+      
+      if (sessionActive && !isSessionActive) {
+        // Session started
+        isSessionActive = true;
+        startTurtleListeners();
+      } else if (!sessionActive && isSessionActive) {
+        // Session ended
+        isSessionActive = false;
+        stopTurtleListeners();
+      }
     });
   </script>
 </body>
