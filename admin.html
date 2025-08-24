@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Panel - Le Petite Desk</title>
+  <title>admin - le petite desk</title>
+  <link rel="icon" type="image/png" href="static/turtle_base/sprite_0.png">
   <style>
     :root {
       --bg: #3c2626;
@@ -29,7 +30,7 @@
     h1 {
       text-align: center;
       color: var(--accent);
-      font-size: 2.5rem;
+      font-size: 1.5rem;
       margin-bottom: 2rem;
     }
 
@@ -38,6 +39,10 @@
     }
 
     .control-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
       background: rgba(253, 246, 236, 0.05);
       border: 1px solid rgba(253, 246, 236, 0.2);
       border-radius: 8px;
@@ -49,6 +54,7 @@
       color: var(--accent);
       margin-top: 0;
       font-size: 1.5rem;
+      text-align: center;
     }
 
     button {
@@ -98,13 +104,63 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      border: 2px dashed rgba(253, 246, 236, 0.3);
       border-radius: 8px;
       background: rgba(253, 246, 236, 0.02);
     }
 
     #qrcode canvas {
       border-radius: 8px;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+
+    #qrcode canvas:hover {
+      transform: scale(1.05);
+    }
+
+    .qr-modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.8);
+      cursor: pointer;
+    }
+
+    .qr-modal-content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: var(--text);
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .qr-modal canvas {
+      border-radius: 8px;
+    }
+
+    .qr-close {
+      position: absolute;
+      top: -10px;
+      right: -10px;
+      background: var(--accent);
+      color: var(--bg);
+      border: none;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 1.2rem;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .qr-placeholder {
@@ -211,7 +267,7 @@
 </head>
 <body>
   <div class="container">
-    <h1>Le Petite Desk - Admin Panel</h1>
+    <h1>Le Petite Desk - Admin</h1>
     
     <div class="control-panel" id="controlPanel">
       <div class="session-status" id="sessionStatus">
@@ -237,6 +293,14 @@
           <li class="empty-state">No active turtles</li>
         </ul>
       </div>
+    </div>
+  </div>
+
+  <!-- QR Code Modal -->
+  <div id="qrModal" class="qr-modal">
+    <div class="qr-modal-content">
+      <button class="qr-close">&times;</button>
+      <div id="modalQrCode"></div>
     </div>
   </div>
 
@@ -309,6 +373,12 @@
                 size: 200,
                 padding: 10
               });
+              
+              // Add click handler to show modal
+              canvas.addEventListener('click', () => {
+                showQrModal(joinUrl);
+              });
+              
               qrcodeDiv.appendChild(canvas);
             } catch (error) {
               console.error('QR Code generation error:', error);
@@ -388,7 +458,7 @@
                 <div class="turtle-sprite" style="background-image: url('${turtleSprites[turtleData.turtleType]}')"></div>
                 <div class="turtle-details">
                   <div class="turtle-name">${turtleData.name}</div>
-                  <div class="turtle-meta">Type ${turtleData.turtleType} • ${spawnDate.toLocaleTimeString()}</div>
+                  <div class="turtle-meta">${spawnDate.toLocaleTimeString()}</div>
                 </div>
               </div>
               <button class="danger small" onclick="removeTurtle('${turtleId}')">Remove</button>
@@ -396,6 +466,60 @@
           `;
         }).join('');
       }
+
+      // QR Modal functionality
+      function showQrModal(url) {
+        const modal = document.getElementById('qrModal');
+        const modalQrCode = document.getElementById('modalQrCode');
+        
+        // Clear previous content
+        modalQrCode.innerHTML = '';
+        
+        // Create larger QR code for modal
+        if (typeof QRious !== 'undefined') {
+          try {
+            const canvas = document.createElement('canvas');
+            const qr = new QRious({
+              element: canvas,
+              value: url,
+              size: 400,
+              padding: 20
+            });
+            modalQrCode.appendChild(canvas);
+          } catch (error) {
+            console.error('Modal QR Code generation error:', error);
+            modalQrCode.innerHTML = `
+              <div style="padding: 2rem; text-align: center; color: #333;">
+                <p style="margin-bottom: 1rem; font-weight: bold;">Join URL:</p>
+                <p style="color: var(--accent); font-size: 1.1rem; word-break: break-all;">${url}</p>
+              </div>
+            `;
+          }
+        }
+        
+        modal.style.display = 'block';
+      }
+      
+      // Close modal functionality
+      const modal = document.getElementById('qrModal');
+      const closeBtn = document.querySelector('.qr-close');
+      
+      closeBtn.addEventListener('click', () => {
+        modal.style.display = 'none';
+      });
+      
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+          modal.style.display = 'none';
+        }
+      });
+      
+      // Close modal on Escape key
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.style.display === 'block') {
+          modal.style.display = 'none';
+        }
+      });
 
       // Make removeTurtle available globally
       window.removeTurtle = async (turtleId) => {

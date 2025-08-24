@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Join the Show - Le Petite Desk</title>
+  <title>welcome - le petite desk</title>
+  <link rel="icon" type="image/png" href="static/turtle_base/sprite_0.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300&display=swap" rel="stylesheet">
@@ -29,13 +30,13 @@
     }
 
     .container {
-      max-width: 400px;
+      max-width: 560px;
       width: 100%;
       text-align: center;
     }
 
     h1 {
-      font-size: 2.5rem;
+      font-size: 2.3rem;
       color: var(--accent);
       margin-bottom: 2rem;
       font-weight: 300;
@@ -58,6 +59,7 @@
       margin-bottom: 0.5rem;
       font-size: 1rem;
       color: rgba(253, 246, 236, 0.8);
+      text-align: center;
     }
 
     input[type="text"],
@@ -103,6 +105,9 @@
       transition: all 0.3s ease;
       position: relative;
       overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
 
     .turtle-option:hover {
@@ -115,12 +120,6 @@
       background: rgba(223, 120, 41, 0.2);
     }
 
-    .turtle-option img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      padding: 1rem;
-    }
 
     .submit-btn {
       width: 100%;
@@ -195,6 +194,45 @@
       padding: 2rem;
     }
 
+    /* Turtle sprite animations */
+    .turtle-sprite {
+      width: 60px;
+      height: 60px;
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+    }
+
+    .turtle-sprite-0 {
+      animation: walkSprite0 1.4s steps(2) infinite;
+    }
+
+    .turtle-sprite-1 {
+      animation: walkSprite1 1.4s steps(2) infinite;
+    }
+
+    .turtle-sprite-2 {
+      animation: walkSprite2 1.4s steps(2) infinite;
+    }
+
+    @keyframes walkSprite0 {
+      0% { background-image: url('static/turtle_spawn/turtle_0/sprite_0.png'); }
+      50% { background-image: url('static/turtle_spawn/turtle_0/sprite_1.png'); }
+      100% { background-image: url('static/turtle_spawn/turtle_0/sprite_0.png'); }
+    }
+
+    @keyframes walkSprite1 {
+      0% { background-image: url('static/turtle_spawn/turtle_1/sprite_0.png'); }
+      50% { background-image: url('static/turtle_spawn/turtle_1/sprite_1.png'); }
+      100% { background-image: url('static/turtle_spawn/turtle_1/sprite_0.png'); }
+    }
+
+    @keyframes walkSprite2 {
+      0% { background-image: url('static/turtle_spawn/turtle_2/sprite_0.png'); }
+      50% { background-image: url('static/turtle_spawn/turtle_2/sprite_1.png'); }
+      100% { background-image: url('static/turtle_spawn/turtle_2/sprite_0.png'); }
+    }
+
     @media (max-width: 480px) {
       .form-container {
         padding: 1.5rem;
@@ -207,16 +245,12 @@
       .turtle-selection {
         gap: 0.5rem;
       }
-
-      .turtle-option img {
-        padding: 0.5rem;
-      }
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>Join the Show</h1>
+    <h1>welcome to le petite desk</h1>
     
     <div id="loadingState" class="loading">
       Checking session...
@@ -230,26 +264,24 @@
     <div id="joinForm" class="form-container" style="display: none;">
       <form id="turtleForm">
         <div class="form-group">
-          <label for="nameInput">Your Name</label>
-          <input type="text" id="nameInput" name="name" placeholder="Enter your name" required>
+          <input type="text" id="nameInput" name="name" placeholder="your name" required>
         </div>
 
         <div class="form-group">
-          <label for="emailInput">Your Email</label>
           <input type="email" id="emailInput" name="email" placeholder="your@email.com" required>
         </div>
 
         <div class="form-group">
-          <label>Choose Your Turtle</label>
+          <label>choose</label>
           <div class="turtle-selection">
             <div class="turtle-option" data-turtle-type="0">
-              <img src="static/turtle_spawn/turtle_0/sprite_0.png" alt="Turtle 0">
+              <div class="turtle-sprite turtle-sprite-0"></div>
             </div>
             <div class="turtle-option" data-turtle-type="1">
-              <img src="static/turtle_spawn/turtle_1/sprite_0.png" alt="Turtle 1">
+              <div class="turtle-sprite turtle-sprite-1"></div>
             </div>
             <div class="turtle-option" data-turtle-type="2">
-              <img src="static/turtle_spawn/turtle_2/sprite_0.png" alt="Turtle 2">
+              <div class="turtle-sprite turtle-sprite-2"></div>
             </div>
           </div>
         </div>
@@ -420,7 +452,7 @@
 
         await push(ref(database, 'turtles'), turtleData);
 
-        showStatus('Your turtle is on its way!', 'success');
+        showStatus('your turtle\'s on its way', 'success');
         
         // Clear form
         turtleForm.reset();

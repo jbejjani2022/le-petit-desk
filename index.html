@@ -46,12 +46,12 @@
     }
 
     section {
-      min-height: 70vh;
+      min-height: 50vh;
       display: flex;
       align-items: center;
       justify-content: center;
       text-align: center;
-      padding: 2rem;
+      padding: 3rem 2rem;
     }
 
     section.landing {
@@ -75,7 +75,7 @@
     }
 
     section.subscribe {
-      min-height: 100vh;
+      min-height: 60vh;
       align-items: center;
       justify-content: center;
       padding-bottom: 0rem;
@@ -387,7 +387,7 @@
       color: var(--text);
       text-align: center;
       padding: 2rem 0 1.1rem;
-      margin-top: 0rem;
+      margin-top: 4rem;
     }
 
     .footer > div {
@@ -591,7 +591,7 @@
         margin-top: 1.5rem;
       }
       
-      section { padding: 1rem; min-height: 60vh; }
+      section { padding: 2rem 1rem; min-height: 45vh; }
 
       section.landing {
         min-height: 100dvh;
@@ -625,7 +625,7 @@
         object-position: center;
       }
 
-      section.subscribe { min-height: 100vh; }
+      section.subscribe { min-height: 60vh; }
 
       /* Turtle responsive adjustments */
       .turtle-container { height: 95px; margin-top: 1.5rem; }
@@ -657,7 +657,7 @@
         margin-top: 1.2rem;
       }
 
-      section { min-height: 55vh; padding: 0; }
+      section { min-height: 40vh; padding: 1rem 0; }
 
       section.landing {
         min-height: 100dvh;
@@ -691,7 +691,7 @@
         object-position: center;
       }
 
-      section.subscribe { min-height: 100vh; }
+      section.subscribe { min-height: 60vh; }
 
       .dot-nav {
         display: flex;
@@ -1082,48 +1082,150 @@
     const app = initializeApp(firebaseConfig);
     const database = getDatabase(app);
 
-    // Concert turtle system
+    // Concert turtle system - V3 with wandering behavior
     let activeTurtles = {};
     let turtleListeners = null;
     let isSessionActive = false;
+    let animationRunning = false;
 
     const landingSection = document.querySelector('section.landing');
 
-    // Wandering animation function
-    function wander(turtleElement) {
-      if (!turtleElement.parentNode || !isSessionActive) {
-        return; // Stop if turtle was removed or session ended
+    // Main animation loop using gsap.ticker
+    function updateAllTurtles() {
+      if (!isSessionActive || Object.keys(activeTurtles).length === 0) {
+        return;
       }
 
-      const landingRect = landingSection.getBoundingClientRect();
-      const turtleSize = 90;
-      
-      // Calculate bounds within the landing section
-      const minX = 50;
-      const maxX = landingRect.width - turtleSize - 50;
-      const minY = 50;
-      const maxY = landingRect.height - turtleSize - 50;
+      Object.values(activeTurtles).forEach(turtle => {
+        if (!turtle.element.parentNode) {
+          return;
+        }
 
-      // Random position
-      const newX = Math.random() * (maxX - minX) + minX;
-      const newY = Math.random() * (maxY - minY) + minY;
-      
-      // Random duration (8-15 seconds)
-      const duration = Math.random() * 7 + 8;
+        // Calculate new position based on current rotation (don't update rotation here)
+        const angleInRadians = turtle.rotation * (Math.PI / 180);
+        turtle.x += turtle.speed * Math.sin(angleInRadians);
+        turtle.y -= turtle.speed * Math.cos(angleInRadians);
 
-      // Determine direction for flipping
-      const currentX = gsap.getProperty(turtleElement, "x") || 0;
-      const scaleX = newX > currentX ? 1 : -1;
+        // Get landing section dimensions (element-relative, not viewport-relative)
+        const sectionWidth = landingSection.offsetWidth;
+        const sectionHeight = landingSection.offsetHeight;
+        const turtleSize = 90;
+        const maxY = sectionHeight * 0.6; // Restrict to top 60% of landing section
+        
+        // Hard boundary enforcement - no off-screen movement allowed
+        let hitBoundary = false;
+        
+        if (turtle.x < 0) {
+          turtle.x = 0;
+          hitBoundary = true;
+        }
+        if (turtle.x > sectionWidth - turtleSize) {
+          turtle.x = sectionWidth - turtleSize;
+          hitBoundary = true;
+        }
+        if (turtle.y < 0) {
+          turtle.y = 0;
+          hitBoundary = true;
+        }
+        if (turtle.y > maxY - turtleSize) {
+          turtle.y = maxY - turtleSize;
+          hitBoundary = true;
+        }
+        
+        // If hit boundary, rotate away from it
+        if (hitBoundary && !turtle.isRotating) {
+          // Calculate rotation away from boundary
+          let targetRotation;
+          const centerX = sectionWidth / 2;
+          const centerY = maxY / 2;
+          
+          // Add some randomness to avoid predictable patterns
+          const randomOffset = (Math.random() - 0.5) * 120; // ±60 degrees of randomness
+          
+          if (turtle.x <= 0) {
+            // Hit left wall - rotate toward right
+            targetRotation = 90 + randomOffset;
+          } else if (turtle.x >= sectionWidth - turtleSize) {
+            // Hit right wall - rotate toward left
+            targetRotation = 270 + randomOffset;
+          } else if (turtle.y <= 0) {
+            // Hit top wall - rotate toward bottom
+            targetRotation = 180 + randomOffset;
+          } else if (turtle.y >= maxY - turtleSize) {
+            // Hit bottom boundary - rotate toward top
+            targetRotation = 0 + randomOffset;
+          } else {
+            // General case - rotate toward center with randomness
+            targetRotation = Math.atan2(centerX - turtle.x, turtle.y - centerY) * (180 / Math.PI) + randomOffset;
+          }
+          
+          smoothRotateToward(turtle, targetRotation);
+        }
 
-      // GSAP animation
-      gsap.to(turtleElement, {
-        x: newX,
-        y: newY,
-        scaleX: scaleX,
-        duration: duration,
-        ease: "none",
-        onComplete: () => wander(turtleElement)
+        // Apply position transform to DOM element
+        gsap.set(turtle.element, { 
+          x: turtle.x, 
+          y: turtle.y
+        });
+
+        // Counter-rotate the name label to keep it horizontal
+        const nameElement = turtle.element.querySelector('.turtle-name');
+        if (nameElement) {
+          gsap.set(nameElement, { rotation: -turtle.rotation });
+        }
       });
+    }
+
+    // Smooth rotation function
+    function smoothRotateToward(turtle, targetRotation) {
+      if (turtle.isRotating) {
+        return; // Already rotating, don't interrupt
+      }
+      
+      turtle.isRotating = true;
+      
+      // Use GSAP to smoothly rotate turtle and its DOM element
+      gsap.to(turtle, {
+        rotation: targetRotation,
+        duration: 4 + Math.random() * 3, // 4-7 second slower rotation
+        ease: "power2.inOut",
+        onUpdate: () => {
+          // Update DOM rotation during tween
+          gsap.set(turtle.element, { rotation: turtle.rotation });
+        },
+        onComplete: () => {
+          turtle.isRotating = false;
+        }
+      });
+    }
+
+    // Course correction function - more varied and exploratory
+    function changeCourse(turtle) {
+      if (!turtle || !isSessionActive) {
+        return;
+      }
+      
+      // More varied rotation changes to encourage exploration
+      let rotationChange;
+      const rand = Math.random();
+      
+      if (rand < 0.5) {
+        // 50% chance: small adjustment (10-30 degrees)
+        rotationChange = (Math.random() - 0.5) * 40 + (Math.random() < 0.5 ? -20 : 20);
+      } else if (rand < 0.8) {
+        // 30% chance: medium turn (30-90 degrees) 
+        rotationChange = (Math.random() - 0.5) * 120 + (Math.random() < 0.5 ? -60 : 60);
+      } else {
+        // 20% chance: big direction change (90-180 degrees)
+        rotationChange = (Math.random() - 0.5) * 180 + (Math.random() < 0.5 ? -90 : 90);
+      }
+      
+      const newRotation = turtle.rotation + rotationChange;
+      smoothRotateToward(turtle, newRotation);
+      
+      // Variable intervals for more organic behavior
+      const nextInterval = Math.random() * 10000 + 6000; // 6-16 seconds
+      setTimeout(() => changeCourse(turtle), nextInterval);
     }
 
     // Spawn turtle function
@@ -1148,38 +1250,46 @@
       turtleContainer.appendChild(spriteDiv);
       turtleContainer.appendChild(nameSpan);
 
-      // Set initial random position
-      const landingRect = landingSection.getBoundingClientRect();
-      const initialX = Math.random() * (landingRect.width - 90);
-      const initialY = Math.random() * (landingRect.height - 90);
+      // Set initial random position within top 60% of landing section
+      const sectionWidth = landingSection.offsetWidth;
+      const sectionHeight = landingSection.offsetHeight;
+      const margin = 10; // Smaller margin to allow more area exploration
+      const maxY = sectionHeight * 0.6;
+      const initialX = Math.random() * (sectionWidth - 90 - margin * 2) + margin;
+      const initialY = Math.random() * (maxY - 90 - margin * 2) + margin;
       
+      // Create turtle state object with slower speeds
+      const turtleState = {
+        element: turtleContainer,
+        x: initialX,
+        y: initialY,
+        rotation: Math.random() * 360, // Random initial rotation
+        speed: Math.random() * 0.2 + 0.3, // Much slower: 0.3 to 0.5 pixels per frame
+        isRotating: false // Track if turtle is currently rotating
+      };
+
       gsap.set(turtleContainer, { 
         x: initialX, 
         y: initialY,
-        opacity: 0,
-        scale: 0
+        rotation: turtleState.rotation,
+        opacity: 1, // Start fully visible
+        scale: 1    // Start at full size
       });
 
-      // Add to DOM
+      // Add to DOM - turtle appears instantly
       landingSection.appendChild(turtleContainer);
 
-      // Entrance animation
-      gsap.to(turtleContainer, {
-        opacity: 1,
-        scale: 1,
-        duration: 0.5,
-        ease: "back.out(1.7)",
-        onComplete: () => {
-          // Start wandering
-          wander(turtleContainer);
-        }
-      });
+      // Start course correction timer immediately
+      changeCourse(turtleState);
 
-      // Store in activeTurtles
-      activeTurtles[turtleId] = {
-        element: turtleContainer,
-        animation: null // GSAP will handle the animation internally
-      };
+      // Store in activeTurtles with new state structure
+      activeTurtles[turtleId] = turtleState;
+
+      // Start the ticker if this is the first turtle
+      if (!animationRunning) {
+        gsap.ticker.add(updateAllTurtles);
+        animationRunning = true;
+      }
     }
 
     // Remove turtle function
@@ -1190,6 +1300,10 @@
 
       const turtle = activeTurtles[turtleId];
       
+      // Kill any ongoing animations on both the element and the turtle state object
+      gsap.killTweensOf(turtle.element);
+      gsap.killTweensOf(turtle);
+      
       // Graceful exit animation
       gsap.to(turtle.element, {
         opacity: 0,
@@ -1197,9 +1311,6 @@
         duration: 1,
         ease: "back.in(1.7)",
         onComplete: () => {
-          // Kill any ongoing animations
-          gsap.killTweensOf(turtle.element);
-          
           // Remove from DOM
           if (turtle.element.parentNode) {
             turtle.element.remove();
@@ -1209,14 +1320,32 @@
 
       // Remove from tracking
       delete activeTurtles[turtleId];
+
+      // Stop the ticker if no turtles are left
+      if (Object.keys(activeTurtles).length === 0 && animationRunning) {
+        gsap.ticker.remove(updateAllTurtles);
+        animationRunning = false;
+      }
     }
 
     // Clear all turtles
     function clearAllTurtles() {
+      // Kill all tweens on turtle state objects
+      Object.values(activeTurtles).forEach(turtle => {
+        gsap.killTweensOf(turtle.element);
+        gsap.killTweensOf(turtle);
+      });
+      
       Object.keys(activeTurtles).forEach(turtleId => {
         removeTurtle(turtleId);
       });
       activeTurtles = {};
+      
+      // Ensure ticker is stopped
+      if (animationRunning) {
+        gsap.ticker.remove(updateAllTurtles);
+        animationRunning = false;
+      }
     }
 
     // Firebase listeners
@@ -1263,6 +1392,12 @@
         // Session ended
         isSessionActive = false;
         stopTurtleListeners();
+        
+        // Ensure ticker is stopped when session ends
+        if (animationRunning) {
+          gsap.ticker.remove(updateAllTurtles);
+          animationRunning = false;
+        }
       }
     });
   </script>
