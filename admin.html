@@ -304,6 +304,8 @@
     </div>
   </div>
 
+  <!-- Load admin configuration (gitignored) -->
+  <script src="admin-config.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
   <script type="module">
     // Firebase configuration
@@ -324,13 +326,18 @@
     const app = initializeApp(firebaseConfig);
     const database = getDatabase(app);
 
-    // Authentication
-    const PASSWORD = "le-petite-password";
+    // Authentication - password loaded from external config
     let isAuthenticated = false;
 
     function authenticate() {
+      // Check if config is loaded
+      if (!window.ADMIN_CONFIG || !window.ADMIN_CONFIG.PASSWORD) {
+        alert("Admin configuration not loaded. Please check your setup.");
+        return;
+      }
+      
       const enteredPassword = prompt("Enter admin password:");
-      if (enteredPassword === PASSWORD) {
+      if (enteredPassword === window.ADMIN_CONFIG.PASSWORD) {
         isAuthenticated = true;
         document.getElementById('controlPanel').style.display = 'block';
         initializeAdmin();
