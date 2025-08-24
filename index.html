@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-SZ7B27RFZE"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -26,14 +25,6 @@
       --text: #fdf6ec;
       --accent: #df7829;
       --font-family: 'Outfit', sans-serif;
-      
-      /* Font options for easy testing:
-         'Outfit', sans-serif (Light - 300)
-         'Space Grotesk', sans-serif (Light - 300)
-         'Inter', sans-serif (Light - 300)
-         'Poppins', sans-serif (ExtraLight - 200)
-         'Epilogue', sans-serif (ExtraLight - 200)
-      */
     }
 
     body {
@@ -57,6 +48,8 @@
     section.landing {
       min-height: 85vh;
       position: relative;
+      /* Crucial for turtle containment */
+      overflow: hidden;
     }
 
     .landing-container {
@@ -117,7 +110,6 @@
       pointer-events: none;
     }
 
-    /* UPDATED: Simplified rule with fluid font size */
     h1.title span {
       position: absolute;
       display: inline-block;
@@ -131,19 +123,19 @@
     .mission, .upcoming, .past, .subscribe {
       opacity: 0;
       transform: translateY(100px);
-      will-change: transform, opacity; /* <-- ADDED FOR PERFORMANCE */
+      will-change: transform, opacity;
     }
 
     .mission p {
       opacity: 0;
       transform: translateY(80px);
-      will-change: transform, opacity; /* <-- ADDED FOR PERFORMANCE */
+      will-change: transform, opacity;
     }
 
     .subscribe form {
       opacity: 0;
       transform: translateY(80px);
-      will-change: transform, opacity; /* <-- ADDED FOR PERFORMANCE */
+      will-change: transform, opacity;
     }
 
     .event {
@@ -151,7 +143,7 @@
       font-size: 1.7rem;
       opacity: 0;
       transform: translateY(60px);
-      will-change: transform, opacity; /* <-- ADDED FOR PERFORMANCE */
+      will-change: transform, opacity;
     }
 
     .event.upcoming-title, .event.past-title, .event.mission-title {
@@ -192,7 +184,6 @@
       color: rgba(253, 246, 236, 0.5);
     }
 
-    /* Remove autofill background and preserve underline-only style */
     input[type="email"]:-webkit-autofill {
       -webkit-box-shadow: 0 0 0px 1000px transparent inset;
       box-shadow: 0 0 0px 1000px transparent inset;
@@ -243,7 +234,6 @@
       color: var(--accent);
     }
 
-    /* Instagram Icon */
     .instagram-icon {
       position: fixed;
       top: 2rem;
@@ -261,7 +251,6 @@
       transform: scale(1.1);
     }
 
-    /* Dot Navigation */
     .dot-nav {
       position: fixed;
       right: 2rem;
@@ -341,16 +330,8 @@
         border-color: rgba(253, 246, 236, 0.5);
         transform: none;
       }
-      .dot-nav .dot:focus,
-      .dot-nav .dot:focus-visible,
-      .dot-nav .dot:active {
-        outline: none;
-        box-shadow: none;
-      }
       .dot-nav .dot.active,
-      .dot-nav .dot.active:hover,
-      .dot-nav .dot.active:focus,
-      .dot-nav .dot.active:active {
+      .dot-nav .dot.active:hover {
         background: rgba(233, 164, 111, 0.2);
         border-color: var(--accent);
         transform: scale(1.7);
@@ -375,15 +356,13 @@
 
     section.subscribe form {
       width: min(var(--content-max), calc(100vw - var(--rail-safe-space)));
-      margin-left: auto;
-      margin-right: auto;
+      margin: 0 auto;
       padding-left: clamp(1rem, 3vw, 2rem);
       padding-right: clamp(1rem, 3vw, 2rem);
     }
 
-    /* Footer */
     .footer {
-      background: #281c1c; /* darker brown than --bg */
+      background: #281c1c;
       color: var(--text);
       text-align: center;
       padding: 2rem 0 1.1rem;
@@ -427,7 +406,6 @@
       height: 52px;
     }
 
-    /* Turtle Animation */
     .turtle-container {
       position: relative;
       width: 100%;
@@ -464,12 +442,13 @@
 
     @keyframes walkSpriteBase {
       0% { background-image: url('static/turtle_base/sprite_0.png'); }
-      50% { background-image: url('static/turtle_base/sprite_1.png'); }
+      50%, 100% { background-image: url('static/turtle_base/sprite_1.png'); }
     }
 
-    /* Concert Turtles CSS */
     .concert-turtle {
       position: absolute;
+      top: 0;
+      left: 0;
       width: 90px;
       height: 90px;
       will-change: transform;
@@ -490,38 +469,12 @@
     }
 
     .turtle-sprite {
-      width: 90px;
-      height: 90px;
+      width: 100%;
+      height: 100%;
       background-size: contain;
       background-repeat: no-repeat;
       background-position: center;
     }
-
-    .turtle-0 .turtle-sprite {
-      background-image: url('static/turtle_spawn/turtle_0/sprite_0.png');
-    }
-
-    .turtle-0 .turtle-sprite:nth-child(even) {
-      background-image: url('static/turtle_spawn/turtle_0/sprite_1.png');
-    }
-
-    .turtle-1 .turtle-sprite {
-      background-image: url('static/turtle_spawn/turtle_1/sprite_0.png');
-    }
-
-    .turtle-1 .turtle-sprite:nth-child(even) {
-      background-image: url('static/turtle_spawn/turtle_1/sprite_1.png');
-    }
-
-    .turtle-2 .turtle-sprite {
-      background-image: url('static/turtle_spawn/turtle_2/sprite_0.png');
-    }
-
-    .turtle-2 .turtle-sprite:nth-child(even) {
-      background-image: url('static/turtle_spawn/turtle_2/sprite_1.png');
-    }
-
-    /* Animated walkSprite keyframes for concert turtles */
 
     .turtle-0 .turtle-sprite {
       animation: walkSprite0 1.4s steps(2) infinite;
@@ -534,100 +487,45 @@
     .turtle-2 .turtle-sprite {
       animation: walkSprite2 1.4s steps(2) infinite;
     }
-
+    
+    /* FIX 1: Make sprite animation continuous to prevent flashing */
     @keyframes walkSprite0 {
       0% { background-image: url('static/turtle_spawn/turtle_0/sprite_0.png'); }
-      50% { background-image: url('static/turtle_spawn/turtle_0/sprite_1.png'); }
+      50%, 100% { background-image: url('static/turtle_spawn/turtle_0/sprite_1.png'); }
     }
 
     @keyframes walkSprite1 {
       0% { background-image: url('static/turtle_spawn/turtle_1/sprite_0.png'); }
-      50% { background-image: url('static/turtle_spawn/turtle_1/sprite_1.png'); }
+      50%, 100% { background-image: url('static/turtle_spawn/turtle_1/sprite_1.png'); }
     }
 
     @keyframes walkSprite2 {
       0% { background-image: url('static/turtle_spawn/turtle_2/sprite_0.png'); }
-      50% { background-image: url('static/turtle_spawn/turtle_2/sprite_1.png'); }
+      50%, 100% { background-image: url('static/turtle_spawn/turtle_2/sprite_1.png'); }
     }
 
-
-
-    /* Mobile responsiveness */
     @media (max-width: 768px) {
       :root { --rail-safe-space: 4.5rem; }
       
-      .instagram-icon {
-        top: 1.5rem;
-        left: 1.5rem;
-        width: 28px;
-        height: 28px;
-      }
-      
-      .dot-nav {
-        transform: translateY(-50%) scale(0.75);
-        right: 1rem;
-        gap: 1rem;
-        opacity: 0.85;
-      }
+      .instagram-icon { top: 1.5rem; left: 1.5rem; width: 28px; height: 28px; }
+      .dot-nav { transform: translateY(-50%) scale(0.75); right: 1rem; gap: 1rem; opacity: 0.85; }
       .dot-nav .dot { width: 9px; height: 9px; }
       .dot-nav .dot.active { transform: scale(1.8); }
-      .dot-nav .dot.active:hover { transform: scale(1.9); }
-      .dot-nav .dot:hover { transform: scale(1.35); }
       
       h1 { font-size: 2.2rem; }
       h2 { font-size: 1.6rem; }
       p { font-size: 1.2rem; }
       .event { font-size: 1.3rem; }
       .event.upcoming-title, .event.past-title, .event.mission-title { font-size: 1.7rem; }
-      
-      input[type="email"] {
-        width: 280px;
-        max-width: 72vw;
-        font-size: 1.5rem;
-      }
-
-      .jam-with-us {
-        font-size: 1.1rem;
-        margin-top: 1.5rem;
-      }
-      
+      input[type="email"] { width: 280px; max-width: 72vw; font-size: 1.5rem; }
+      .jam-with-us { font-size: 1.1rem; margin-top: 1.5rem; }
       section { padding: 2rem 1rem; min-height: 45vh; }
 
-      section.landing {
-        min-height: 100dvh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-        max-width: 100%;
-        overflow-x: hidden;
-      }
-
-      .landing-container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-        max-width: 100%;
-        overflow-x: hidden;
-      }
-
-      .desk-graphic {
-        width: 150%;
-        max-width: none;
-        height: auto;
-        position: relative;
-        left: 50%;
-        transform: translateX(-50%);
-        display: block;
-        object-fit: contain;
-        object-position: center;
-      }
-
+      section.landing { min-height: 100dvh; display: flex; align-items: center; justify-content: center; width: 100%; max-width: 100%; }
+      .landing-container { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; max-width: 100%; }
+      .desk-graphic { width: 150%; max-width: none; height: auto; position: relative; left: 50%; transform: translateX(-50%); display: block; object-fit: contain; object-position: center; }
       section.subscribe { min-height: 60vh; }
 
-      /* Turtle responsive adjustments */
       .turtle-container { height: 95px; margin-top: 1.5rem; }
       .turtle { width: 72px; height: 72px; }
       .turtle.animate { animation: walkAcrossWithDelay 24s linear infinite, walkSpriteBase 1.4s steps(2) infinite; }
@@ -636,77 +534,22 @@
     @media (max-width: 480px) {
       :root { --rail-safe-space: 4rem; }
       
-      .instagram-icon {
-        top: 1rem;
-        left: 1rem;
-        width: 24px;
-        height: 24px;
-      }
-      
+      .instagram-icon { top: 1rem; left: 1rem; width: 24px; height: 24px; }
       h1 { font-size: 1.8rem; }
       .event.upcoming-title, .event.past-title, .event.mission-title { font-size: 1.4rem; }
-      
-      input[type="email"] {
-        width: 240px;
-        max-width: 70vw;
-        font-size: 1.2rem;
-      }
-
-      .jam-with-us {
-        font-size: 1.1rem;
-        margin-top: 1.2rem;
-      }
-
+      input[type="email"] { width: 240px; max-width: 70vw; font-size: 1.2rem; }
+      .jam-with-us { font-size: 1.1rem; margin-top: 1.2rem; }
       section { min-height: 40vh; padding: 1rem 0; }
 
-      section.landing {
-        min-height: 100dvh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-        max-width: 100%;
-        overflow-x: hidden;
-      }
-
-      .landing-container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-        max-width: 100%;
-        overflow-x: hidden;
-      }
-
-      .desk-graphic {
-        width: 180%;
-        max-width: none;
-        height: auto;
-        position: relative;
-        left: 50%;
-        transform: translateX(-50%);
-        display: block;
-        object-fit: contain;
-        object-position: center;
-      }
-
+      section.landing { min-height: 100dvh; display: flex; align-items: center; justify-content: center; width: 100%; max-width: 100%; }
+      .landing-container { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; max-width: 100%; }
+      .desk-graphic { width: 180%; max-width: none; height: auto; position: relative; left: 50%; transform: translateX(-50%); display: block; object-fit: contain; object-position: center; }
       section.subscribe { min-height: 60vh; }
 
-      .dot-nav {
-        display: flex;
-        right: 0.8rem;
-        gap: 1.1rem;
-        transform: translateY(-50%) scale(0.7);
-        opacity: 0.9;
-      }
-
+      .dot-nav { display: flex; right: 0.8rem; gap: 1.1rem; transform: translateY(-50%) scale(0.7); opacity: 0.9; }
       .dot-nav .dot { width: 9px; height: 9px; }
       .dot-nav .dot.active { transform: scale(1.85); }
-      .dot-nav .dot.active:hover { transform: scale(2.0); }
-      .dot-nav .dot:hover { transform: scale(1.45); }
 
-      /* Turtle responsive adjustments for small mobile */
       .turtle-container { height: 80px; margin-top: 1rem; }
       .turtle { width: 60px; height: 60px; }
       .turtle.animate { animation: walkAcrossWithDelay 20s linear infinite, walkSpriteBase 1.4s steps(2) infinite; }
@@ -714,21 +557,14 @@
   </style>
 </head>
 <body>
-
   <a href="https://www.instagram.com/lepetitedesk/" target="_blank" rel="noopener noreferrer">
-    <svg class="instagram-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-      <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-    </svg>
+    <svg class="instagram-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
   </a>
 
   <section class="landing">
     <div class="landing-container">
       <img src="static/desk.svg" alt="Le Petite Desk" class="desk-graphic" width="1600" height="1600" />
-      <h1 class="title">
-        <span>le</span>
-        <span>petite</span>
-        <span>desk</span>
-      </h1>
+      <h1 class="title"><span>le</span><span>petite</span><span>desk</span></h1>
     </div>
   </section>
 
@@ -739,9 +575,7 @@
       <p>home to a petite desk with big sound</p>
       <p>no pressure, just music that matters</p>
       <p>made in good company</p>
-      <div class="turtle-container">
-        <div class="turtle"></div>
-      </div>
+      <div class="turtle-container"><div class="turtle"></div></div>
     </div>
   </section>
 
@@ -787,293 +621,103 @@
   <script>
     gsap.registerPlugin(ScrollTrigger);
     
-    // Replace with your deployed Google Apps Script Web App URL (ends with /exec)
     const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzIjuet4gxxD3LvkvByzy9Sxb_cWK-Nk7c0SEVxO_HuycgEMe4XKM0TDaWm35RIhsGXvw/exec';
-
-    // ✨ NEW: DYNAMIC WORD POSITIONING LOGIC
     const deskGraphic = document.querySelector('.desk-graphic');
     const titleContainer = document.querySelector('h1.title');
     const words = gsap.utils.toArray(".title span");
-
-    // Define the target positions as percentages OF THE IMAGE ITSELF.
-    // Tweak these values slightly if needed to get the perfect placement.
-    const wordPositions = [
-      { x: 0.37, y: 0.4325 }, // le
-      { x: 0.455, y: 0.545 }, // petite
-      { x: 0.57, y: 0.595 }  // desk
-    ];
+    const wordPositions = [{ x: 0.37, y: 0.4325 }, { x: 0.455, y: 0.545 }, { x: 0.57, y: 0.595 }];
 
     function updateWordPositions() {
-      // Get the current size and position of the desk image and the title container
       const deskRect = deskGraphic.getBoundingClientRect();
       const titleRect = titleContainer.getBoundingClientRect();
-
       words.forEach((word, index) => {
         const pos = wordPositions[index];
-        
-        // Calculate the absolute target coordinates on the page
         const targetX = deskRect.left + (deskRect.width * pos.x);
         const targetY = deskRect.top + (deskRect.height * pos.y);
-
-        // Convert the absolute coordinates to be relative to the title container,
-        // which is the positioning parent of the words.
-        const finalLeft = targetX - titleRect.left;
-        const finalTop = targetY - titleRect.top;
-
-        // Use GSAP to instantly set the position.
-        // This sets the final destination for the drop-in animation.
-        gsap.set(word, { left: finalLeft, top: finalTop });
+        gsap.set(word, { left: targetX - titleRect.left, top: targetY - titleRect.top });
       });
     }
 
-    // Run the positioning logic when the page loads and on window resize.
-    // We 'debounce' the resize event to avoid performance issues.
     let resizeTimer;
     window.addEventListener('resize', () => {
       clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(updateWordPositions, 100);
+      resizeTimer = setTimeout(() => {
+        updateWordPositions();
+        window.dispatchEvent(new Event('debouncedResize'));
+      }, 100);
     });
 
-    // Ensure image is loaded before we calculate, then run initial positioning
-    deskGraphic.addEventListener('load', updateWordPositions);
-    // Fallback for cached images that might not fire a 'load' event
-    if (deskGraphic.complete) {
+    const onPageReady = () => {
       updateWordPositions();
-    }
-    // END NEW LOGIC
+      window.dispatchEvent(new Event('pageReadyForBounds'));
+    };
+    deskGraphic.addEventListener('load', onPageReady);
+    if (deskGraphic.complete) onPageReady();
 
-    // Title animation - This remains the same!
-    // It will now animate to the dynamically calculated positions.
     words.forEach((word, index) => {
-      const rotations = [-4, 2, 0];
-      const delays = [0.3, 0.7, 1.1];
-      const bounceHeights = [25, 30, 28];
-      
-      gsap.timeline()
-        .to(word, {
-          y: 0,
-          opacity: 1,
-          rotation: rotations[index],
-          duration: 0.8,
-          ease: "power3.in",
-          delay: delays[index]
-        })
-        .to(word, { y: -bounceHeights[index], duration: 0.15, ease: "power2.out" })
-        .to(word, { y: 0, duration: 0.25, ease: "power2.in" })
-        .to(word, { y: -bounceHeights[index] * 0.6, duration: 0.12, ease: "power2.out" })
-        .to(word, { y: 0, duration: 0.2, ease: "power2.in" })
-        .to(word, { y: -bounceHeights[index] * 0.25, duration: 0.1, ease: "power2.out" })
-        .to(word, { y: 0, duration: 0.15, ease: "power2.in" });
+      const rotations = [-4, 2, 0], delays = [0.3, 0.7, 1.1], bounceHeights = [25, 30, 28];
+      gsap.timeline().to(word, { y: 0, opacity: 1, rotation: rotations[index], duration: 0.8, ease: "power3.in", delay: delays[index] })
+        .to(word, { y: -bounceHeights[index], duration: 0.15, ease: "power2.out" }).to(word, { y: 0, duration: 0.25, ease: "power2.in" })
+        .to(word, { y: -bounceHeights[index] * 0.6, duration: 0.12, ease: "power2.out" }).to(word, { y: 0, duration: 0.2, ease: "power2.in" })
+        .to(word, { y: -bounceHeights[index] * 0.25, duration: 0.1, ease: "power2.out" }).to(word, { y: 0, duration: 0.15, ease: "power2.in" });
     });
 
-    // Scroll-triggered fade-in-up animations for sections
     [".mission", ".upcoming", ".past", ".subscribe"].forEach(cls => {
-      gsap.to(cls, {
-        opacity: 1,
-        y: 0,
-        duration: 1.2,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: cls,
-          start: "top 85%",
-          toggleActions: "play none none none"
-        }
-      });
+      gsap.to(cls, { opacity: 1, y: 0, duration: 1.2, ease: "power3.out", scrollTrigger: { trigger: cls, start: "top 85%", toggleActions: "play none none none" }});
     });
-
-    // Fade-in-up animations for individual events
     gsap.utils.toArray(".event").forEach((event, index) => {
-      gsap.to(event, {
-        opacity: 1,
-        y: 0,
-        duration: 1,
-        ease: "power3.out",
-        delay: index * 0.15,
-        scrollTrigger: {
-          trigger: event.closest('section'),
-          start: "top 80%",
-          toggleActions: "play none none none"
-        }
-      });
+      gsap.to(event, { opacity: 1, y: 0, duration: 1, ease: "power3.out", delay: index * 0.15, scrollTrigger: { trigger: event.closest('section'), start: "top 80%", toggleActions: "play none none none" }});
     });
+    gsap.to(".mission p, .subscribe form", { opacity: 1, y: 0, duration: 1.2, ease: "power3.out", scrollTrigger: { trigger: ".mission", start: "top 85%", toggleActions: "play none none none" }});
 
-    // Fade-in-up for mission text
-    gsap.to(".mission p", {
-      opacity: 1,
-      y: 0,
-      duration: 1.2,
-      ease: "power3.out",
-      scrollTrigger: {
-        trigger: ".mission",
-        start: "top 85%",
-        toggleActions: "play none none none"
-      }
-    });
-
-    // Fade-in-up for subscribe form
-    gsap.to(".subscribe form", {
-      opacity: 1,
-      y: 0,
-      duration: 1.2,
-      ease: "power3.out",
-      scrollTrigger: {
-        trigger: ".subscribe",
-        start: "top 85%",
-        toggleActions: "play none none none"
-      }
-    });
-
-    // Email validation
-    const emailInput = document.getElementById('emailInput');
-    const errorMessage = document.getElementById('errorMessage');
-    const subscribeForm = document.getElementById('subscribeForm');
-
-    function validateEmail(email) {
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      return emailRegex.test(email);
-    }
-
-    function showError() {
-      errorMessage.classList.add('show');
-    }
-
-    function hideError() {
-      errorMessage.classList.remove('show');
-    }
-
-    subscribeForm.addEventListener('submit', function(e) {
+    const emailInput = document.getElementById('emailInput'), errorMessage = document.getElementById('errorMessage'), subscribeForm = document.getElementById('subscribeForm');
+    subscribeForm.addEventListener('submit', e => {
       e.preventDefault();
       const email = emailInput.value.trim();
-      
-      if (!email || !validateEmail(email)) {
-        showError();
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        errorMessage.classList.add('show');
       } else {
-        hideError();
-        const data = new FormData();
-        data.append('email', email);
-        
-        if (WEB_APP_URL && WEB_APP_URL.startsWith('https')) {
-          fetch(WEB_APP_URL, {
-            method: 'POST',
-            body: new URLSearchParams({ email }),
-            mode: 'no-cors'
-          });
-        }
-        
+        errorMessage.classList.remove('show');
+        if (WEB_APP_URL) fetch(WEB_APP_URL, { method: 'POST', body: new URLSearchParams({ email }), mode: 'no-cors' });
         emailInput.value = '';
-        const subscribeText = document.querySelector('.subscribe-text');
-        if (subscribeText) {
-          subscribeText.textContent = 'thanks! you\'re on the list';
-        }
+        document.querySelector('.subscribe-text').textContent = 'thanks! you\'re on the list';
       }
     });
+    emailInput.addEventListener('input', () => errorMessage.classList.remove('show'));
 
-    emailInput.addEventListener('input', function() {
-      hideError();
-    });
-
-    // ✅ NEW: OPTIMIZED DOT NAVIGATION LOGIC
-    const dots = document.querySelectorAll('.dot-nav .dot');
-    const sections = document.querySelectorAll('section');
-
+    const dots = document.querySelectorAll('.dot-nav .dot'), sections = document.querySelectorAll('section');
     dots.forEach((dot, index) => {
       const section = sections[index];
       if (!section) return;
-
-      // Use ScrollTrigger to efficiently toggle the active class
-      ScrollTrigger.create({
-        trigger: section,
-        start: "top center",
-        end: "bottom center",
-        onToggle: self => {
-          if (self.isActive) {
-            dots.forEach(d => d.classList.remove('active'));
-            dot.classList.add('active');
-          }
-        }
-      });
-
-      // Click-to-scroll logic
-      dot.addEventListener('click', () => {
-        if (index === sections.length - 1) {
-          const footer = document.querySelector('.footer');
-          if (footer) {
-            footer.scrollIntoView({
-              behavior: 'smooth',
-              block: 'center',
-              inline: 'center'
-            });
-            return;
-          }
-        }
-        section.scrollIntoView({
-          behavior: 'smooth',
-          block: 'center',
-          inline: 'center'
-        });
-      });
+      ScrollTrigger.create({ trigger: section, start: "top center", end: "bottom center", onToggle: self => {
+        if (self.isActive) { dots.forEach(d => d.classList.remove('active')); dot.classList.add('active'); }
+      }});
+      dot.addEventListener('click', () => section.scrollIntoView({ behavior: 'smooth', block: 'center' }));
     });
 
-    // ✅ NEW: OPTIMIZED NAV EXPANSION LOGIC
     const dotNav = document.querySelector('.dot-nav');
     let shrinkTimeout;
-
     ScrollTrigger.create({
       trigger: "body",
-      onScrollStart: () => {
-        if (window.matchMedia('(min-width: 769px)').matches) {
-            clearTimeout(shrinkTimeout);
-            dotNav.classList.add('expanded');
-        }
-      },
-      onScrollEnd: () => {
-        if (window.matchMedia('(min-width: 769px)').matches) {
-            shrinkTimeout = setTimeout(() => {
-                dotNav.classList.remove('expanded');
-            }, 1200);
-        }
-      }
+      onScrollStart: () => { if (window.matchMedia('(min-width: 769px)').matches) { clearTimeout(shrinkTimeout); dotNav.classList.add('expanded'); }},
+      onScrollEnd: () => { if (window.matchMedia('(min-width: 769px)').matches) { shrinkTimeout = setTimeout(() => dotNav.classList.remove('expanded'), 1200); }}
     });
+    dotNav.addEventListener('mouseenter', () => { if (window.matchMedia('(min-width: 769px)').matches) dotNav.classList.add('expanded'); });
+    dotNav.addEventListener('mouseleave', () => { if (window.matchMedia('(min-width: 769px)').matches) dotNav.classList.remove('expanded'); });
 
-    // Keep the hover effects, they are not a performance issue
-    dotNav.addEventListener('mouseenter', () => {
-      if (window.matchMedia('(min-width: 769px)').matches) {
-        dotNav.classList.add('expanded');
-      }
-    });
-    dotNav.addEventListener('mouseleave', () => {
-      if (window.matchMedia('(min-width: 769px)').matches) {
-        dotNav.classList.remove('expanded');
-      }
-    });
-
-    // Turtle animation trigger
-    function startTurtleAnimation() {
-      const turtle = document.querySelector('.turtle');
-      if (turtle && !turtle.classList.contains('animate')) {
-        turtle.classList.add('animate');
-      }
-    }
-
-    ScrollTrigger.create({
-      trigger: ".mission",
-      start: "top 80%",
-      onEnter: startTurtleAnimation,
-      once: true
-    });
+    ScrollTrigger.create({ trigger: ".mission", start: "top 80%", onEnter: () => document.querySelector('.turtle')?.classList.add('animate'), once: true });
   </script>
 
   <script type="module">
-    // Firebase configuration for concert turtles
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
-    import { getDatabase, ref, onValue, off } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-database.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getDatabase, ref, onValue, off } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyB3iNIa3Yp9C1HQpEEjbu6_x5EK93aU9eo",
       authDomain: "le-petite-desk-14f1a.firebaseapp.com",
       databaseURL: "https://le-petite-desk-14f1a-default-rtdb.firebaseio.com",
       projectId: "le-petite-desk-14f1a",
-      storageBucket: "le-petite-desk-14f1a.firebasestorage.app",
+      storageBucket: "le-petite-desk-14f1a.appspot.com",
       messagingSenderId: "477144999138",
       appId: "1:477144999138:web:f476c84f3c745ce9bceabb",
       measurementId: "G-ERHPGQ2CFM"
@@ -1082,93 +726,45 @@
     const app = initializeApp(firebaseConfig);
     const database = getDatabase(app);
 
-    // Concert turtle system - V3 with wandering behavior
-    let activeTurtles = {};
-    let turtleListeners = null;
-    let isSessionActive = false;
-    let animationRunning = false;
-
+    let activeTurtles = {}, isSessionActive = false, animationRunning = false;
     const landingSection = document.querySelector('section.landing');
+    let landingBounds = { width: 0, height: 0 };
 
-    // Main animation loop using gsap.ticker
+    function updateBounds() {
+      landingBounds.width = landingSection.offsetWidth;
+      landingBounds.height = landingSection.offsetHeight;
+    }
+    
+    window.addEventListener('pageReadyForBounds', updateBounds, { once: true });
+    window.addEventListener('debouncedResize', updateBounds);
+    updateBounds(); // Initial call to prevent race condition
+
     function updateAllTurtles() {
-      if (!isSessionActive || Object.keys(activeTurtles).length === 0) {
-        return;
-      }
-
+      if (!isSessionActive) return;
       Object.values(activeTurtles).forEach(turtle => {
-        if (!turtle.element.parentNode) {
-          return;
-        }
+        if (!turtle.element.parentNode) return;
 
-        // Calculate new position based on current rotation (don't update rotation here)
         const angleInRadians = turtle.rotation * (Math.PI / 180);
         turtle.x += turtle.speed * Math.sin(angleInRadians);
         turtle.y -= turtle.speed * Math.cos(angleInRadians);
 
-        // Get landing section dimensions (element-relative, not viewport-relative)
-        const sectionWidth = landingSection.offsetWidth;
-        const sectionHeight = landingSection.offsetHeight;
         const turtleSize = 90;
-        const maxY = sectionHeight * 0.6; // Restrict to top 60% of landing section
-        
-        // Hard boundary enforcement - no off-screen movement allowed
         let hitBoundary = false;
+        if (turtle.x < 0) { turtle.x = 0; hitBoundary = true; }
+        if (turtle.x > landingBounds.width - turtleSize) { turtle.x = landingBounds.width - turtleSize; hitBoundary = true; }
+        if (turtle.y < 0) { turtle.y = 0; hitBoundary = true; }
+        if (turtle.y > landingBounds.height - turtleSize) { turtle.y = landingBounds.height - turtleSize; hitBoundary = true; }
         
-        if (turtle.x < 0) {
-          turtle.x = 0;
-          hitBoundary = true;
-        }
-        if (turtle.x > sectionWidth - turtleSize) {
-          turtle.x = sectionWidth - turtleSize;
-          hitBoundary = true;
-        }
-        if (turtle.y < 0) {
-          turtle.y = 0;
-          hitBoundary = true;
-        }
-        if (turtle.y > maxY - turtleSize) {
-          turtle.y = maxY - turtleSize;
-          hitBoundary = true;
-        }
-        
-        // If hit boundary, rotate away from it
+        // FIX 2: Implement gentler boundary turns
         if (hitBoundary && !turtle.isRotating) {
-          // Calculate rotation away from boundary
-          let targetRotation;
-          const centerX = sectionWidth / 2;
-          const centerY = maxY / 2;
-          
-          // Add some randomness to avoid predictable patterns
-          const randomOffset = (Math.random() - 0.5) * 120; // ±60 degrees of randomness
-          
-          if (turtle.x <= 0) {
-            // Hit left wall - rotate toward right
-            targetRotation = 90 + randomOffset;
-          } else if (turtle.x >= sectionWidth - turtleSize) {
-            // Hit right wall - rotate toward left
-            targetRotation = 270 + randomOffset;
-          } else if (turtle.y <= 0) {
-            // Hit top wall - rotate toward bottom
-            targetRotation = 180 + randomOffset;
-          } else if (turtle.y >= maxY - turtleSize) {
-            // Hit bottom boundary - rotate toward top
-            targetRotation = 0 + randomOffset;
-          } else {
-            // General case - rotate toward center with randomness
-            targetRotation = Math.atan2(centerX - turtle.x, turtle.y - centerY) * (180 / Math.PI) + randomOffset;
-          }
-          
-          smoothRotateToward(turtle, targetRotation);
+          const centerX = landingBounds.width / 2;
+          const centerY = landingBounds.height / 2;
+          const angleToCenter = Math.atan2(centerX - turtle.x, -(centerY - turtle.y)) * (180 / Math.PI);
+          const variance = (Math.random() - 0.5) * 90; // +/- 45 degree variance
+          smoothRotateToward(turtle, angleToCenter + variance);
         }
 
-        // Apply position transform to DOM element
-        gsap.set(turtle.element, { 
-          x: turtle.x, 
-          y: turtle.y
-        });
-
-        // Counter-rotate the name label to keep it horizontal
+        gsap.set(turtle.element, { x: turtle.x, y: turtle.y });
         const nameElement = turtle.element.querySelector('.turtle-name');
         if (nameElement) {
           gsap.set(nameElement, { rotation: -turtle.rotation });
@@ -1176,202 +772,95 @@
       });
     }
 
-    // Smooth rotation function
     function smoothRotateToward(turtle, targetRotation) {
-      if (turtle.isRotating) {
-        return; // Already rotating, don't interrupt
-      }
-      
+      if (turtle.isRotating) return;
       turtle.isRotating = true;
-      
-      // Use GSAP to smoothly rotate turtle and its DOM element
       gsap.to(turtle, {
         rotation: targetRotation,
-        duration: 4 + Math.random() * 3, // 4-7 second slower rotation
-        ease: "power2.inOut",
-        onUpdate: () => {
-          // Update DOM rotation during tween
-          gsap.set(turtle.element, { rotation: turtle.rotation });
-        },
-        onComplete: () => {
-          turtle.isRotating = false;
-        }
+        duration: 2.0 + Math.random() * 2.0, // A smooth, longer rotation
+        ease: "sine.inOut",
+        overwrite: 'auto',
+        onUpdate: () => gsap.set(turtle.element, { rotation: turtle.rotation }),
+        onComplete: () => turtle.isRotating = false
       });
     }
 
-    // Course correction function - more varied and exploratory
+    // FIX 3: Implement specific wandering behavior
     function changeCourse(turtle) {
-      if (!turtle || !isSessionActive) {
-        return;
-      }
+      if (!turtle || !isSessionActive) return;
       
-      // More varied rotation changes to encourage exploration
-      let rotationChange;
-      const rand = Math.random();
-      
-      if (rand < 0.5) {
-        // 50% chance: small adjustment (10-30 degrees)
-        rotationChange = (Math.random() - 0.5) * 40 + (Math.random() < 0.5 ? -20 : 20);
-      } else if (rand < 0.8) {
-        // 30% chance: medium turn (30-90 degrees) 
-        rotationChange = (Math.random() - 0.5) * 120 + (Math.random() < 0.5 ? -60 : 60);
+      let rotationMagnitude;
+      if (Math.random() < 0.5) {
+        rotationMagnitude = Math.random() * 35 + 10; // 10-45 degrees
       } else {
-        // 20% chance: big direction change (90-180 degrees)
-        rotationChange = (Math.random() - 0.5) * 180 + (Math.random() < 0.5 ? -90 : 90);
+        rotationMagnitude = Math.random() * 45 + 45; // 45-90 degrees
       }
       
-      const newRotation = turtle.rotation + rotationChange;
+      const rotationDirection = Math.random() < 0.5 ? 1 : -1;
+      const newRotation = turtle.rotation + (rotationMagnitude * rotationDirection);
       smoothRotateToward(turtle, newRotation);
       
-      // Variable intervals for more organic behavior
-      const nextInterval = Math.random() * 10000 + 6000; // 6-16 seconds
+      const nextInterval = Math.random() * 5000 + 5000; // 5-10 seconds
       setTimeout(() => changeCourse(turtle), nextInterval);
     }
 
-    // Spawn turtle function
     function spawnTurtle(turtleId, turtleData) {
-      if (activeTurtles[turtleId]) {
-        return; // Already exists
-      }
+      if (activeTurtles[turtleId]) return;
 
-      // Create turtle container
       const turtleContainer = document.createElement('div');
       turtleContainer.className = `concert-turtle turtle-${turtleData.turtleType}`;
-
-      // Create sprite div
       const spriteDiv = document.createElement('div');
       spriteDiv.className = 'turtle-sprite';
-      
-      // Create name label
       const nameSpan = document.createElement('span');
       nameSpan.className = 'turtle-name';
       nameSpan.textContent = turtleData.name;
+      turtleContainer.append(spriteDiv, nameSpan);
 
-      turtleContainer.appendChild(spriteDiv);
-      turtleContainer.appendChild(nameSpan);
-
-      // Set initial random position within top 60% of landing section
-      const sectionWidth = landingSection.offsetWidth;
-      const sectionHeight = landingSection.offsetHeight;
-      const margin = 10; // Smaller margin to allow more area exploration
-      const maxY = sectionHeight * 0.6;
-      const initialX = Math.random() * (sectionWidth - 90 - margin * 2) + margin;
-      const initialY = Math.random() * (maxY - 90 - margin * 2) + margin;
+      const turtleSize = 90, margin = 10;
+      const initialX = Math.random() * (landingBounds.width - turtleSize - margin * 2) + margin;
+      const initialY = Math.random() * (landingBounds.height - turtleSize - margin * 2) + margin;
       
-      // Create turtle state object with slower speeds
       const turtleState = {
-        element: turtleContainer,
-        x: initialX,
-        y: initialY,
-        rotation: Math.random() * 360, // Random initial rotation
-        speed: Math.random() * 0.2 + 0.3, // Much slower: 0.3 to 0.5 pixels per frame
-        isRotating: false // Track if turtle is currently rotating
+        element: turtleContainer, x: initialX, y: initialY,
+        rotation: Math.random() * 360, speed: Math.random() * 0.2 + 0.3, isRotating: false
       };
 
-      gsap.set(turtleContainer, { 
-        x: initialX, 
-        y: initialY,
-        rotation: turtleState.rotation,
-        opacity: 1, // Start fully visible
-        scale: 1    // Start at full size
-      });
-
-      // Add to DOM - turtle appears instantly
+      gsap.set(turtleContainer, { x: initialX, y: initialY, rotation: turtleState.rotation, opacity: 1, scale: 1 });
       landingSection.appendChild(turtleContainer);
-
-      // Start course correction timer immediately
       changeCourse(turtleState);
-
-      // Store in activeTurtles with new state structure
       activeTurtles[turtleId] = turtleState;
 
-      // Start the ticker if this is the first turtle
       if (!animationRunning) {
         gsap.ticker.add(updateAllTurtles);
         animationRunning = true;
       }
     }
 
-    // Remove turtle function
     function removeTurtle(turtleId) {
-      if (!activeTurtles[turtleId]) {
-        return;
-      }
-
       const turtle = activeTurtles[turtleId];
-      
-      // Kill any ongoing animations on both the element and the turtle state object
-      gsap.killTweensOf(turtle.element);
-      gsap.killTweensOf(turtle);
-      
-      // Graceful exit animation
+      if (!turtle) return;
+      gsap.killTweensOf([turtle.element, turtle]);
       gsap.to(turtle.element, {
-        opacity: 0,
-        scale: 0,
-        duration: 1,
-        ease: "back.in(1.7)",
-        onComplete: () => {
-          // Remove from DOM
-          if (turtle.element.parentNode) {
-            turtle.element.remove();
-          }
-        }
+        opacity: 0, scale: 0, duration: 1, ease: "back.in(1.7)",
+        onComplete: () => turtle.element.remove()
       });
-
-      // Remove from tracking
       delete activeTurtles[turtleId];
-
-      // Stop the ticker if no turtles are left
       if (Object.keys(activeTurtles).length === 0 && animationRunning) {
         gsap.ticker.remove(updateAllTurtles);
         animationRunning = false;
       }
     }
 
-    // Clear all turtles
     function clearAllTurtles() {
-      // Kill all tweens on turtle state objects
-      Object.values(activeTurtles).forEach(turtle => {
-        gsap.killTweensOf(turtle.element);
-        gsap.killTweensOf(turtle);
-      });
-      
-      Object.keys(activeTurtles).forEach(turtleId => {
-        removeTurtle(turtleId);
-      });
-      activeTurtles = {};
-      
-      // Ensure ticker is stopped
-      if (animationRunning) {
-        gsap.ticker.remove(updateAllTurtles);
-        animationRunning = false;
-      }
+      Object.values(activeTurtles).forEach(turtle => gsap.killTweensOf([turtle.element, turtle]));
+      Object.keys(activeTurtles).forEach(removeTurtle);
     }
 
-    // Firebase listeners
     function startTurtleListeners() {
-      // Listen for turtle additions
       onValue(ref(database, 'turtles'), (snapshot) => {
-        const turtles = snapshot.val();
-        
-        if (!turtles) {
-          clearAllTurtles();
-          return;
-        }
-
-        // Handle new turtles
-        Object.entries(turtles).forEach(([turtleId, turtleData]) => {
-          if (!activeTurtles[turtleId]) {
-            spawnTurtle(turtleId, turtleData);
-          }
-        });
-
-        // Handle removed turtles
-        Object.keys(activeTurtles).forEach(turtleId => {
-          if (!turtles[turtleId]) {
-            removeTurtle(turtleId);
-          }
-        });
+        const turtles = snapshot.val() || {};
+        Object.keys(activeTurtles).forEach(id => !turtles[id] && removeTurtle(id));
+        Object.entries(turtles).forEach(([id, data]) => !activeTurtles[id] && spawnTurtle(id, data));
       });
     }
 
@@ -1380,24 +869,14 @@
       clearAllTurtles();
     }
 
-    // Session state listener
     onValue(ref(database, 'session/isActive'), (snapshot) => {
       const sessionActive = snapshot.val();
-      
       if (sessionActive && !isSessionActive) {
-        // Session started
         isSessionActive = true;
         startTurtleListeners();
       } else if (!sessionActive && isSessionActive) {
-        // Session ended
         isSessionActive = false;
         stopTurtleListeners();
-        
-        // Ensure ticker is stopped when session ends
-        if (animationRunning) {
-          gsap.ticker.remove(updateAllTurtles);
-          animationRunning = false;
-        }
       }
     });
   </script>
