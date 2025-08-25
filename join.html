@@ -222,21 +222,24 @@
     }
 
     @keyframes walkSprite0 {
-      0% { background-image: url('static/turtle_spawn/turtle_0/sprite_0.png'); }
-      50% { background-image: url('static/turtle_spawn/turtle_0/sprite_1.png'); }
-      100% { background-image: url('static/turtle_spawn/turtle_0/sprite_0.png'); }
+      0%     { background-image: url('static/turtles_to_spawn/turtle_0/sprite_0.png'); }
+      49.99% { background-image: url('static/turtles_to_spawn/turtle_0/sprite_0.png'); } /* Hold frame 1 */
+      50%    { background-image: url('static/turtles_to_spawn/turtle_0/sprite_1.png'); } /* Snap to frame 2 */
+      100%   { background-image: url('static/turtles_to_spawn/turtle_0/sprite_1.png'); } /* Hold frame 2 */
     }
-
+    
     @keyframes walkSprite1 {
-      0% { background-image: url('static/turtle_spawn/turtle_1/sprite_0.png'); }
-      50% { background-image: url('static/turtle_spawn/turtle_1/sprite_1.png'); }
-      100% { background-image: url('static/turtle_spawn/turtle_1/sprite_0.png'); }
+      0%     { background-image: url('static/turtles_to_spawn/turtle_1/sprite_0.png'); }
+      49.99% { background-image: url('static/turtles_to_spawn/turtle_1/sprite_1.png'); }
+      50%    { background-image: url('static/turtles_to_spawn/turtle_1/sprite_1.png'); }
+      100%   { background-image: url('static/turtles_to_spawn/turtle_1/sprite_1.png'); }
     }
-
+    
     @keyframes walkSprite2 {
-      0% { background-image: url('static/turtle_spawn/turtle_2/sprite_0.png'); }
-      50% { background-image: url('static/turtle_spawn/turtle_2/sprite_1.png'); }
-      100% { background-image: url('static/turtle_spawn/turtle_2/sprite_0.png'); }
+      0%     { background-image: url('static/turtles_to_spawn/turtle_2/sprite_0.png'); }
+      49.99% { background-image: url('static/turtles_to_spawn/turtle_2/sprite_0.png'); }
+      50%    { background-image: url('static/turtles_to_spawn/turtle_2/sprite_1.png'); }
+      100%   { background-image: url('static/turtles_to_spawn/turtle_2/sprite_1.png'); }
     }
 
     @media (max-width: 480px) {
@@ -428,17 +431,17 @@
 
       // Validation
       if (!name) {
-        showStatus('Please enter your name', 'error');
+        showStatus('please enter your name', 'error');
         return;
       }
 
       if (!email || !validateEmail(email)) {
-        showStatus('Please enter a valid email address', 'error');
+        showStatus('please enter a valid email address', 'error');
         return;
       }
 
       if (selectedTurtleType === null) {
-        showStatus('Please select a turtle design', 'error');
+        showStatus('please select a turtle', 'error');
         return;
       }
 
@@ -472,7 +475,7 @@
 
       } catch (error) {
         console.error('Submission error:', error);
-        showStatus('Something went wrong. Please try again.', 'error');
+        showStatus('something went wrong. please try again.', 'error');
         submitBtn.disabled = false;
         submitBtn.textContent = 'deploy turtle';
       }

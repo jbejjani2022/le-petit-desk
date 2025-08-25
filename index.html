@@ -441,8 +441,10 @@
     }
 
     @keyframes walkSpriteBase {
-      0% { background-image: url('static/turtle_base/sprite_0.png'); }
-      50%, 100% { background-image: url('static/turtle_base/sprite_1.png'); }
+      0%     { background-image: url('static/turtle_base/sprite_0.png'); }
+      49.99% { background-image: url('static/turtle_base/sprite_0.png'); } /* Hold frame 1 */
+      50%    { background-image: url('static/turtle_base/sprite_1.png'); } /* Snap to frame 2 */
+      100%   { background-image: url('static/turtle_base/sprite_1.png'); } /* Hold frame 2 */
     }
 
     .concert-turtle {
@@ -488,20 +490,25 @@
       animation: walkSprite2 1.4s steps(2) infinite;
     }
     
-    /* FIX 1: Make sprite animation continuous to prevent flashing */
     @keyframes walkSprite0 {
-      0% { background-image: url('static/turtle_spawn/turtle_0/sprite_0.png'); }
-      50%, 100% { background-image: url('static/turtle_spawn/turtle_0/sprite_1.png'); }
+      0%     { background-image: url('static/turtles_to_spawn/turtle_0/sprite_0.png'); }
+      49.99% { background-image: url('static/turtles_to_spawn/turtle_0/sprite_0.png'); } /* Hold frame 1 */
+      50%    { background-image: url('static/turtles_to_spawn/turtle_0/sprite_1.png'); } /* Snap to frame 2 */
+      100%   { background-image: url('static/turtles_to_spawn/turtle_0/sprite_1.png'); } /* Hold frame 2 */
     }
-
+    
     @keyframes walkSprite1 {
-      0% { background-image: url('static/turtle_spawn/turtle_1/sprite_0.png'); }
-      50%, 100% { background-image: url('static/turtle_spawn/turtle_1/sprite_1.png'); }
+      0%     { background-image: url('static/turtles_to_spawn/turtle_1/sprite_0.png'); }
+      49.99% { background-image: url('static/turtles_to_spawn/turtle_1/sprite_1.png'); }
+      50%    { background-image: url('static/turtles_to_spawn/turtle_1/sprite_1.png'); }
+      100%   { background-image: url('static/turtles_to_spawn/turtle_1/sprite_1.png'); }
     }
-
+    
     @keyframes walkSprite2 {
-      0% { background-image: url('static/turtle_spawn/turtle_2/sprite_0.png'); }
-      50%, 100% { background-image: url('static/turtle_spawn/turtle_2/sprite_1.png'); }
+      0%     { background-image: url('static/turtles_to_spawn/turtle_2/sprite_0.png'); }
+      49.99% { background-image: url('static/turtles_to_spawn/turtle_2/sprite_0.png'); }
+      50%    { background-image: url('static/turtles_to_spawn/turtle_2/sprite_1.png'); }
+      100%   { background-image: url('static/turtles_to_spawn/turtle_2/sprite_1.png'); }
     }
 
     @media (max-width: 768px) {

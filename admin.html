@@ -485,7 +485,7 @@
 
         turtleList.innerHTML = turtleEntries.map(([turtleId, data]) => {
           const spawnDate = new Date(data.spawnTime);
-          const spritePath = `static/turtle_spawn/turtle_${data.turtleType}/sprite_0.png`;
+          const spritePath = `static/turtles_to_spawn/turtle_${data.turtleType}/sprite_0.png`;
           return `
             <li class="turtle-item">
               <div class="turtle-info">
