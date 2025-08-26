@@ -1,9 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-MDXNW9DF26"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-MDXNW9DF26');
+  </script>
+
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>admin - le petite desk</title>
+  <title>admin - le petit desk</title>
   <link rel="icon" type="image/png" href="static/turtle_base/sprite_0.png">
   <style>
     :root {
@@ -325,7 +335,7 @@
 </head>
 <body>
   <div class="container">
-    <h1>Le Petite Desk Admin</h1>
+    <h1>Le Petit Desk Admin</h1>
 
     <div id="login-container">
       <h2>Login</h2>
@@ -377,14 +387,14 @@
     import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
     const firebaseConfig = {
-      apiKey: "AIzaSyB3iNIa3Yp9C1HQpEEjbu6_x5EK93aU9eo",
-      authDomain: "le-petite-desk-14f1a.firebaseapp.com",
-      databaseURL: "https://le-petite-desk-14f1a-default-rtdb.firebaseio.com",
-      projectId: "le-petite-desk-14f1a",
-      storageBucket: "le-petite-desk-14f1a.appspot.com",
-      messagingSenderId: "477144999138",
-      appId: "1:477144999138:web:f476c84f3c745ce9bceabb",
-      measurementId: "G-ERHPGQ2CFM"
+      apiKey: "AIzaSyDcUEzJ33ZCM9U2PCkBgxREsAjBBC2InoE",
+      authDomain: "le-petit-desk.firebaseapp.com",
+      databaseURL: "https://le-petit-desk-default-rtdb.firebaseio.com",
+      projectId: "le-petit-desk",
+      storageBucket: "le-petit-desk.firebasestorage.app",
+      messagingSenderId: "245188577687",
+      appId: "1:245188577687:web:9d3b0bbbf56486f69e1cd2",
+      measurementId: "G-MDXNW9DF26"
     };
 
     const app = initializeApp(firebaseConfig);

@@ -1,6 +1,6 @@
-# 🎵 Le Petite Desk
+# 🎵 Le Petit Desk
 
-A minimal website for le petite desk, a dorm-turned-studio that hosts intimate musical gatherings. We create spaces for musicians to perform without pressure, in good company.
+A minimal website for le petit desk, a dorm-turned-studio that hosts intimate musical gatherings. We create spaces for musicians to perform without pressure, in good company.
 
 ## 🎯 Key Sections
 
@@ -43,6 +43,6 @@ GSAP animations can be customized in the script section:
 
 ## 📞 Contact
 
-- **Website**: [lepetitedesk.com](https://lepetitedesk.com)
-- **Instagram**: [@lepetitedesk](https://www.instagram.com/lepetitedesk/)
-- **Email**: [lepetitedesk@gmail.com](mailto:lepetitedesk@gmail.com)
+- **Website**: [lepetitdesk.com](https://lepetitdesk.com)
+- **Instagram**: [@lepetitdesk](https://www.instagram.com/lepetit_desk/)
+- **Email**: [lepetitdesk@gmail.com](mailto:lepetitdesk@gmail.com)

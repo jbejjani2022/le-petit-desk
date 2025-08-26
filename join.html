@@ -1,9 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-MDXNW9DF26"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-MDXNW9DF26');
+  </script>
+
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>welcome - le petite desk</title>
+  <title>welcome - le petit desk</title>
   <link rel="icon" type="image/png" href="static/turtle_base/sprite_0.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -259,7 +269,7 @@
 </head>
 <body>
   <div class="container">
-    <h1>welcome to le petite desk</h1>
+    <h1>welcome to le petit desk</h1>
     
     <div id="loadingState" class="loading">
       Checking session...
@@ -308,21 +318,21 @@
     import { getDatabase, ref, get, push, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-database.js";
 
     const firebaseConfig = {
-      apiKey: "AIzaSyB3iNIa3Yp9C1HQpEEjbu6_x5EK93aU9eo",
-      authDomain: "le-petite-desk-14f1a.firebaseapp.com",
-      databaseURL: "https://le-petite-desk-14f1a-default-rtdb.firebaseio.com",
-      projectId: "le-petite-desk-14f1a",
-      storageBucket: "le-petite-desk-14f1a.firebasestorage.app",
-      messagingSenderId: "477144999138",
-      appId: "1:477144999138:web:f476c84f3c745ce9bceabb",
-      measurementId: "G-ERHPGQ2CFM"
+      apiKey: "AIzaSyDcUEzJ33ZCM9U2PCkBgxREsAjBBC2InoE",
+      authDomain: "le-petit-desk.firebaseapp.com",
+      databaseURL: "https://le-petit-desk-default-rtdb.firebaseio.com",
+      projectId: "le-petit-desk",
+      storageBucket: "le-petit-desk.firebasestorage.app",
+      messagingSenderId: "245188577687",
+      appId: "1:245188577687:web:9d3b0bbbf56486f69e1cd2",
+      measurementId: "G-MDXNW9DF26"
     };
 
     const app = initializeApp(firebaseConfig);
     const database = getDatabase(app);
 
     // Google Apps Script URL (same as index.html)
-    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzIjuet4gxxD3LvkvByzy9Sxb_cWK-Nk7c0SEVxO_HuycgEMe4XKM0TDaWm35RIhsGXvw/exec';
+    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbw3k-4-AcvT80aS8Bd9G6pWVrrAeIoPDhL7GmgPg_T93e-QNaMNDyBtkAICKkfgirVF_A/exec';
 
     // DOM elements
     const loadingState = document.getElementById('loadingState');
