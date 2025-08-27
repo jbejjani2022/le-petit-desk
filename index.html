@@ -500,7 +500,7 @@
     
     @keyframes walkSprite1 {
       0%     { background-image: url('static/turtles_to_spawn/turtle_1/sprite_0.png'); }
-      49.99% { background-image: url('static/turtles_to_spawn/turtle_1/sprite_1.png'); }
+      49.99% { background-image: url('static/turtles_to_spawn/turtle_1/sprite_0.png'); }
       50%    { background-image: url('static/turtles_to_spawn/turtle_1/sprite_1.png'); }
       100%   { background-image: url('static/turtles_to_spawn/turtle_1/sprite_1.png'); }
     }
@@ -718,7 +718,7 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getDatabase, ref, onValue, off } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+    import { getDatabase, ref, onValue, off, set } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyDcUEzJ33ZCM9U2PCkBgxREsAjBBC2InoE",
@@ -735,6 +735,7 @@
     const database = getDatabase(app);
 
     let activeTurtles = {}, isSessionActive = false, animationRunning = false;
+    let currentRaceState = 'idle';
     const landingSection = document.querySelector('section.landing');
     let landingBounds = { width: 0, height: 0 };
 
@@ -749,35 +750,117 @@
 
     function updateAllTurtles() {
       if (!isSessionActive) return;
-      Object.values(activeTurtles).forEach(turtle => {
-        if (!turtle.element.parentNode) return;
+      
+      if (currentRaceState === 'idle') {
+        // Original wandering logic
+        Object.values(activeTurtles).forEach(turtle => {
+          if (!turtle.element.parentNode) return;
 
-        const angleInRadians = turtle.rotation * (Math.PI / 180);
-        turtle.x += turtle.speed * Math.sin(angleInRadians);
-        turtle.y -= turtle.speed * Math.cos(angleInRadians);
+          const angleInRadians = turtle.rotation * (Math.PI / 180);
+          turtle.x += turtle.speed * Math.sin(angleInRadians);
+          turtle.y -= turtle.speed * Math.cos(angleInRadians);
 
-        const turtleSize = 90;
-        let hitBoundary = false;
-        if (turtle.x < 0) { turtle.x = 0; hitBoundary = true; }
-        if (turtle.x > landingBounds.width - turtleSize) { turtle.x = landingBounds.width - turtleSize; hitBoundary = true; }
-        if (turtle.y < 0) { turtle.y = 0; hitBoundary = true; }
-        if (turtle.y > landingBounds.height - turtleSize) { turtle.y = landingBounds.height - turtleSize; hitBoundary = true; }
+          const turtleSize = 90;
+          let hitBoundary = false;
+          if (turtle.x < 0) { turtle.x = 0; hitBoundary = true; }
+          if (turtle.x > landingBounds.width - turtleSize) { turtle.x = landingBounds.width - turtleSize; hitBoundary = true; }
+          if (turtle.y < 0) { turtle.y = 0; hitBoundary = true; }
+          if (turtle.y > landingBounds.height - turtleSize) { turtle.y = landingBounds.height - turtleSize; hitBoundary = true; }
+          
+          if (hitBoundary && !turtle.isRotating) {
+            const centerX = landingBounds.width / 2;
+            const centerY = landingBounds.height / 2;
+            const angleToCenter = Math.atan2(centerX - turtle.x, -(centerY - turtle.y)) * (180 / Math.PI);
+            const variance = (Math.random() - 0.5) * 90;
+            smoothRotateToward(turtle, angleToCenter + variance);
+          }
+
+          gsap.set(turtle.element, { x: turtle.x, y: turtle.y });
+          const nameElement = turtle.element.querySelector('.turtle-name');
+          if (nameElement) {
+            gsap.set(nameElement, { rotation: -turtle.rotation });
+          }
+        });
+      } else if (currentRaceState === 'starting') {
+        // During lineup and countdown, keep all turtles at 0 rotation
+        Object.values(activeTurtles).forEach(turtle => {
+          if (!turtle.element.parentNode) return;
+          
+          gsap.set(turtle.element, { x: turtle.x, y: turtle.y, rotation: 0 });
+          const nameElement = turtle.element.querySelector('.turtle-name');
+          if (nameElement) {
+            gsap.set(nameElement, { rotation: 0 });
+          }
+        });
+      } else if (currentRaceState === 'racing') {
+        // Race logic
+        Object.values(activeTurtles).forEach(turtle => {
+          if (!turtle.element.parentNode) return;
+
+          // Only move turtles that haven't finished
+          if (!turtle.race.isFinished) {
+            // Move turtle upward
+            turtle.y -= turtle.race.speed;
+
+            // Check for independent speed changes every 3-6 seconds
+            const currentTime = Date.now();
+            if (currentTime >= turtle.race.nextSpeedChange) {
+              // 60% chance for speed increase, 40% chance for decrease
+              if (Math.random() < 0.6) {
+                // Speed increase: 0.03 to 0.08
+                const increase = Math.random() * 0.05 + 0.03;
+                turtle.race.speed += increase;
+              } else {
+                // Speed decrease: 0.03 to 0.08
+                const decrease = Math.random() * 0.05 + 0.03;
+                turtle.race.speed -= decrease;
+              }
+              
+              // Clamp speed within reasonable bounds
+              turtle.race.speed = Math.max(0.1, Math.min(1.0, turtle.race.speed));
+              
+              // Schedule next speed change in 3-6 seconds
+              turtle.race.nextSpeedChange = currentTime + Math.random() * 3000 + 3000;
+            }
+
+            // Check if turtle reached finish line
+            if (turtle.y <= 0) {
+              turtle.y = 0;
+              turtle.race.isFinished = true;
+              // Pause walking animation
+              const spriteElement = turtle.element.querySelector('.turtle-sprite');
+              if (spriteElement) {
+                spriteElement.style.animationPlayState = 'paused';
+              }
+            }
+          }
+
+          // Maintain 0-degree rotation during race (head pointing up) for all turtles
+          gsap.set(turtle.element, { x: turtle.x, y: turtle.y, rotation: 0 });
+          const nameElement = turtle.element.querySelector('.turtle-name');
+          if (nameElement) {
+            gsap.set(nameElement, { rotation: 0 }); // Keep name upright too
+          }
+        });
         
-        // FIX 2: Implement gentler boundary turns
-        if (hitBoundary && !turtle.isRotating) {
-          const centerX = landingBounds.width / 2;
-          const centerY = landingBounds.height / 2;
-          const angleToCenter = Math.atan2(centerX - turtle.x, -(centerY - turtle.y)) * (180 / Math.PI);
-          const variance = (Math.random() - 0.5) * 90; // +/- 45 degree variance
-          smoothRotateToward(turtle, angleToCenter + variance);
+        // Check if all turtles have finished
+        const allFinished = Object.values(activeTurtles).every(turtle => turtle.race.isFinished);
+        if (allFinished && currentRaceState === 'racing') {
+          // Update race state to finished
+          set(ref(database, 'session/raceState'), 'finished');
         }
-
-        gsap.set(turtle.element, { x: turtle.x, y: turtle.y });
-        const nameElement = turtle.element.querySelector('.turtle-name');
-        if (nameElement) {
-          gsap.set(nameElement, { rotation: -turtle.rotation });
-        }
-      });
+      } else if (currentRaceState === 'finished') {
+        // Keep finished turtles stationary at 0 rotation until zen mode
+        Object.values(activeTurtles).forEach(turtle => {
+          if (!turtle.element.parentNode) return;
+          
+          gsap.set(turtle.element, { x: turtle.x, y: turtle.y, rotation: 0 });
+          const nameElement = turtle.element.querySelector('.turtle-name');
+          if (nameElement) {
+            gsap.set(nameElement, { rotation: 0 });
+          }
+        });
+      }
     }
 
     function smoothRotateToward(turtle, targetRotation) {
@@ -830,7 +913,12 @@
       
       const turtleState = {
         element: turtleContainer, x: initialX, y: initialY,
-        rotation: Math.random() * 360, speed: Math.random() * 0.2 + 0.3, isRotating: false
+        rotation: Math.random() * 360, speed: Math.random() * 0.2 + 0.3, isRotating: false,
+        race: {
+          isFinished: false,
+          speed: 0,
+          nextSpeedChange: 0
+        }
       };
 
       gsap.set(turtleContainer, { x: initialX, y: initialY, rotation: turtleState.rotation, opacity: 1, scale: 1 });
@@ -877,14 +965,191 @@
       clearAllTurtles();
     }
 
-    onValue(ref(database, 'session/isActive'), (snapshot) => {
-      const sessionActive = snapshot.val();
+    // Race state handler
+    function handleRaceStateChange(newState) {
+      if (newState === 'starting') {
+        initiateRace();
+      } else if (newState === 'racing') {
+        startRace();
+      } else if (newState === 'idle') {
+        enterZenMode();
+      }
+    }
+
+    // Race state: starting - line up turtles and show countdown
+    function initiateRace() {
+      if (!isSessionActive) return;
+      
+      // Hide any existing countdown
+      const existingCountdown = document.getElementById('raceCountdown');
+      if (existingCountdown) existingCountdown.remove();
+      
+      const turtles = Object.values(activeTurtles);
+      if (turtles.length === 0) return;
+      
+      // Position turtles at starting line - ensure all are visible and centered
+      const startingY = landingBounds.height - 90;
+      const turtleWidth = 90; // Width of each turtle
+      const screenMargin = 20; // Minimum margin from screen edges
+      
+      let spacing, startingX;
+      
+      if (turtles.length === 1) {
+        // Single turtle - center it
+        startingX = (landingBounds.width - turtleWidth) / 2;
+        spacing = 0;
+      } else {
+        // Multiple turtles - calculate optimal spacing and center the lineup
+        const maxDesiredSpacing = 100; // Ideal spacing between turtle centers
+        const idealLineupWidth = (turtles.length - 1) * maxDesiredSpacing + turtleWidth;
+        
+        if (idealLineupWidth <= landingBounds.width - (2 * screenMargin)) {
+          // Use ideal spacing and center
+          spacing = maxDesiredSpacing;
+        } else {
+          // Reduce spacing to fit on screen (may overlap if necessary)
+          const availableWidthForSpacing = landingBounds.width - (2 * screenMargin) - turtleWidth;
+          spacing = availableWidthForSpacing / (turtles.length - 1);
+        }
+        
+        // Calculate actual lineup width and center it
+        const actualLineupWidth = (turtles.length - 1) * spacing + turtleWidth;
+        startingX = (landingBounds.width - actualLineupWidth) / 2;
+      }
+      
+      turtles.forEach((turtle, index) => {
+        gsap.killTweensOf([turtle.element, turtle]);
+        turtle.isRotating = true; // Prevent wandering
+        
+        // Calculate position for this turtle
+        const targetX = turtles.length === 1 ? startingX : startingX + (index * spacing);
+        
+        gsap.to(turtle, {
+          x: targetX,
+          y: startingY,
+          rotation: 0, // Face upward
+          duration: 2,
+          ease: "power2.inOut",
+          onUpdate: () => {
+            gsap.set(turtle.element, { x: turtle.x, y: turtle.y, rotation: turtle.rotation });
+            const nameElement = turtle.element.querySelector('.turtle-name');
+            if (nameElement) {
+              gsap.set(nameElement, { rotation: -turtle.rotation });
+            }
+          },
+          onComplete: () => {
+            turtle.isRotating = false;
+          }
+        });
+      });
+      
+      // Show countdown
+      setTimeout(() => showCountdown(), 1000);
+    }
+
+    // Show countdown animation
+    function showCountdown() {
+      const countdownDiv = document.createElement('div');
+      countdownDiv.id = 'raceCountdown';
+      countdownDiv.style.cssText = `
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: clamp(3rem, 8vw, 8rem);
+        font-weight: bold;
+        color: var(--accent);
+        z-index: 20;
+        text-shadow: 2px 2px 4px rgba(60, 38, 38, 0.8);
+        pointer-events: none;
+        opacity: 0;
+      `;
+      landingSection.appendChild(countdownDiv);
+      
+      let count = 3;
+      const countdown = () => {
+        countdownDiv.textContent = count;
+        gsap.fromTo(countdownDiv, 
+          { opacity: 0, scale: 0.5 },
+          { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(1.7)" }
+        );
+        
+        setTimeout(() => {
+          gsap.to(countdownDiv, { opacity: 0, scale: 1.5, duration: 0.5 });
+        }, 500);
+        
+        count--;
+        if (count > 0) {
+          setTimeout(countdown, 1000);
+        } else {
+          setTimeout(() => countdownDiv.remove(), 1000);
+        }
+      };
+      
+      countdown();
+    }
+
+    // Race state: racing - assign speeds and start moving
+    function startRace() {
+      if (!isSessionActive) return;
+      
+      Object.values(activeTurtles).forEach(turtle => {
+        // Assign tighter starting speed distribution for more equal footing
+        turtle.race.speed = Math.random() * 0.1 + 0.3; // 0.3 to 0.4 (tight range)
+        turtle.race.isFinished = false;
+        
+        // Set up independent speed change interval for each turtle
+        turtle.race.nextSpeedChange = Date.now() + Math.random() * 3000 + 3000; // 3-6 seconds
+        
+        // Resume walking animation
+        const spriteElement = turtle.element.querySelector('.turtle-sprite');
+        if (spriteElement) {
+          spriteElement.style.animationPlayState = 'running';
+        }
+      });
+    }
+
+    // Race state: idle (Zen Mode) - reset turtles to wandering
+    function enterZenMode() {
+      if (!isSessionActive) return;
+      
+      // Hide any countdown
+      const existingCountdown = document.getElementById('raceCountdown');
+      if (existingCountdown) existingCountdown.remove();
+      
+      Object.values(activeTurtles).forEach(turtle => {
+        // Reset race properties
+        turtle.race.isFinished = false;
+        turtle.race.speed = 0;
+        turtle.race.nextSpeedChange = 0;
+        
+        // Resume walking animation
+        const spriteElement = turtle.element.querySelector('.turtle-sprite');
+        if (spriteElement) {
+          spriteElement.style.animationPlayState = 'running';
+        }
+        
+        // Restart wandering behavior
+        changeCourse(turtle);
+      });
+    }
+
+    onValue(ref(database, 'session'), (snapshot) => {
+      const session = snapshot.val();
+      const sessionActive = session && session.isActive;
+      const newRaceState = session ? (session.raceState || 'idle') : 'idle';
+      
       if (sessionActive && !isSessionActive) {
         isSessionActive = true;
         startTurtleListeners();
       } else if (!sessionActive && isSessionActive) {
         isSessionActive = false;
         stopTurtleListeners();
+      }
+      
+      if (newRaceState !== currentRaceState) {
+        currentRaceState = newRaceState;
+        handleRaceStateChange(newRaceState);
       }
     });
   </script>

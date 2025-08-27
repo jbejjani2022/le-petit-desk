@@ -17,6 +17,13 @@ A minimal website for le petit desk, a dorm-turned-studio that hosts intimate mu
 - **Users join**: Visit `join.html?session=<ID>` by entering the link or scanning the QR code. Pick an avatar and enter your name.
 - **What happens**: While a session is active, users can join and spawn turtles on the home page (`index.html`) in real time for all viewers.
 
+## 🏁 Turtle Race
+
+- Requires an active session with at least one turtle.
+- In `admin.html`, click "Start Race" to trigger a 3-2-1 countdown; turtles line up at the bottom and race to the top with random speed changes.
+- Click "Zen" to return turtles to normal wandering.
+- Synchronized across clients via Firebase `session.raceState`: `idle` → `starting` → `racing` → `finished`.
+
 ## 🎨 Customization
 
 ### Adding Events

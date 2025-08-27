@@ -354,6 +354,8 @@
         <h2>Session Control</h2>
         <button id="startSessionBtn">Start Interactive Session</button>
         <button id="endSessionBtn" class="danger" disabled>End Interactive Session</button>
+        <button id="startRaceBtn" disabled>Start Race</button>
+        <button id="zenBtn" disabled>Zen Mode</button>
       </div>
 
       <div class="control-section">
@@ -432,21 +434,29 @@
     function initializeAdminPanel() {
       const startSessionBtn = document.getElementById('startSessionBtn');
       const endSessionBtn = document.getElementById('endSessionBtn');
+      const startRaceBtn = document.getElementById('startRaceBtn');
+      const zenBtn = document.getElementById('zenBtn');
       const qrcodeDiv = document.getElementById('qrcode');
       const turtleList = document.getElementById('turtleList');
       const sessionStatus = document.getElementById('sessionStatus');
       const modal = document.getElementById('qrModal');
       const closeBtn = document.querySelector('.qr-close');
+      
+      let currentSession = null;
+      let activeTurtleCount = 0;
 
       // Listen for session changes
       onValue(ref(database, 'session'), (snapshot) => {
-        const session = snapshot.val();
-        if (session && session.isActive) {
-          sessionStatus.textContent = `Session Active (ID: ${session.sessionId})`;
+        currentSession = snapshot.val();
+        updateButtonStates();
+        
+        if (currentSession && currentSession.isActive) {
+          const raceStateText = currentSession.raceState ? ` - ${currentSession.raceState.toUpperCase()}` : '';
+          sessionStatus.textContent = `Session Active (ID: ${currentSession.sessionId})${raceStateText}`;
           sessionStatus.className = 'session-status session-active';
           startSessionBtn.disabled = true;
           endSessionBtn.disabled = false;
-          generateQrCode(`${window.location.origin}/join.html?session=${session.sessionId}`);
+          generateQrCode(`${window.location.origin}/join.html?session=${currentSession.sessionId}`);
         } else {
           sessionStatus.textContent = 'Session Inactive';
           sessionStatus.className = 'session-status session-inactive';
@@ -458,19 +468,50 @@
 
       // Listen for turtle changes
       onValue(ref(database, 'turtles'), (snapshot) => {
-        renderTurtles(snapshot.val());
+        const turtles = snapshot.val() || {};
+        activeTurtleCount = Object.keys(turtles).length;
+        updateButtonStates();
+        renderTurtles(turtles);
       });
+
+      // Update button states based on session and turtle count
+      function updateButtonStates() {
+        const isActive = currentSession && currentSession.isActive;
+        const raceState = currentSession ? (currentSession.raceState || 'idle') : 'idle';
+        
+        // Start Race button: enabled when session active, race state is idle/finished, and has turtles
+        startRaceBtn.disabled = !isActive || 
+          !(raceState === 'idle' || raceState === 'finished') || 
+          activeTurtleCount === 0;
+        
+        // Zen Mode button: enabled when session active and race state is starting/racing/finished
+        zenBtn.disabled = !isActive || 
+          !(raceState === 'starting' || raceState === 'racing' || raceState === 'finished');
+      }
 
       // Event listeners for session control
       startSessionBtn.addEventListener('click', async () => {
         const sessionId = Date.now().toString();
         await set(ref(database, 'turtles'), null);
-        await set(ref(database, 'session'), { isActive: true, sessionId: sessionId });
+        await set(ref(database, 'session'), { isActive: true, sessionId: sessionId, raceState: 'idle' });
       });
 
       endSessionBtn.addEventListener('click', async () => {
-        await set(ref(database, 'session'), { isActive: false, sessionId: null });
+        await set(ref(database, 'session'), { isActive: false, sessionId: null, raceState: 'idle' });
         await set(ref(database, 'turtles'), null);
+      });
+
+      // Event listeners for race control
+      startRaceBtn.addEventListener('click', async () => {
+        await set(ref(database, 'session/raceState'), 'starting');
+        // After 4 seconds, automatically change to racing
+        setTimeout(async () => {
+          await set(ref(database, 'session/raceState'), 'racing');
+        }, 4000);
+      });
+
+      zenBtn.addEventListener('click', async () => {
+        await set(ref(database, 'session/raceState'), 'idle');
       });
 
       function generateQrCode(url) {
