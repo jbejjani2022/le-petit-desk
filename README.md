@@ -10,6 +10,13 @@ A minimal website for le petit desk, a dorm-turned-studio that hosts intimate mu
 4. **Past**: Previous events and performances
 5. **Subscribe**: Email signup and contact information
 
+## 🕹️ Interactive Sessions
+
+- **Admin starts**: Open `admin.html`, authenticate, and start a session with a unique ID and QR code.
+- **Share link/code**: Send `join.html?session=<ID>` or share the QR code directly.
+- **Users join**: Visit `join.html?session=<ID>` by entering the link or scanning the QR code. Pick an avatar and enter your name.
+- **What happens**: While a session is active, users can join and spawn turtles on the home page (`index.html`) in real time for all viewers.
+
 ## 🎨 Customization
 
 ### Adding Events
